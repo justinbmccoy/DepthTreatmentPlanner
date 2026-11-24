@@ -1,0 +1,2886 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#fafaf9]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depth & Humanistic Treatment Planner</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafaf9;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @keyframes toastSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .toast-enter {
+            animation: toastSlideUp 0.22s ease-out forwards;
+        }
+        [contenteditable="true"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #0d9488;
+            background-color: #ffffff;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: #ffffff !important;
+                color: #0f172a !important;
+            }
+            .print-clean {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 antialiased flex flex-col selection:bg-teal-600 selection:text-white">
+
+    <!-- ========================================================================= -->
+    <!-- GLOBAL HEADER BAR                                                         -->
+    <!-- ========================================================================= -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+            
+            <!-- Application Title & Orientation Subtitle -->
+            <div class="flex items-center space-x-3">
+                <div class="bg-teal-600 text-white rounded-xl w-10 h-10 flex items-center justify-center shadow-md shrink-0">
+                    <i class="fa-solid fa-compass text-lg"></i>
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">Depth & Humanistic Treatment Planner</h1>
+                        <span class="text-[10px] font-semibold uppercase tracking-wider bg-teal-950/90 text-teal-300 border border-teal-700/60 px-2.5 py-0.5 rounded-full">
+                            Zero-PHI Client-Side
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400">Psychodynamic • Person-Centered • Emotion-Focused • Existential • Relational</p>
+                </div>
+            </div>
+
+            <!-- Header Controls: Global Audit Toggle + Reset Plan -->
+            <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
+                <!-- Global Audit Metrics & Timeframes Toggle Switch -->
+                <div class="flex items-center space-x-3 bg-slate-800/95 px-3.5 py-2 rounded-xl border border-slate-700/80">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-clock-rotate-left text-teal-400 text-xs"></i>
+                        <div>
+                            <span class="text-xs font-semibold text-slate-100 block leading-none">Audit Metrics & Timeframes</span>
+                            <span class="text-[10px] text-slate-400 block mt-0.5">Process frequency & review windows</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <label class="relative inline-flex items-center cursor-pointer" aria-label="Toggle Audit Metrics and Timeframes">
+                            <input type="checkbox" id="auditToggle" class="sr-only peer" checked onchange="handleAuditToggleChange()">
+                            <div class="w-10 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-600"></div>
+                        </label>
+                        <span id="auditToggleStatus" class="text-[11px] font-bold px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 w-10 text-center">ON</span>
+                    </div>
+                </div>
+
+                <!-- Reset Plan Button -->
+                <button onclick="resetPlan()" class="bg-slate-800 hover:bg-rose-950/80 text-slate-300 hover:text-rose-200 border border-slate-700 hover:border-rose-800/70 px-3.5 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shrink-0" title="Clear all selections and start fresh">
+                    <i class="fa-solid fa-rotate-left text-[11px]"></i>
+                    <span>Reset Plan</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 4-STEP WIZARD NAVIGATION BAR                                              -->
+    <!-- ========================================================================= -->
+    <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-[104px] lg:top-[69px] z-40 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-2.5 overflow-x-auto custom-scrollbar gap-2">
+                <button onclick="goToStep(1)" id="navStep1" class="flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap bg-teal-50 text-teal-800 ring-1 ring-teal-600/30">
+                    <span class="w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[10px] font-bold">1</span>
+                    <span>Presenting Concerns</span>
+                    <span id="badgeStep1" class="hidden text-[10px] bg-teal-600 text-white px-1.5 py-0.2 rounded-full">0</span>
+                </button>
+
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs shrink-0"></i>
+
+                <button onclick="goToStep(2)" id="navStep2" class="flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-medium transition whitespace-nowrap text-slate-600 hover:bg-slate-100">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px] font-bold">2</span>
+                    <span>Select Goals</span>
+                    <span id="badgeStep2" class="hidden text-[10px] bg-slate-700 text-white px-1.5 py-0.2 rounded-full">0</span>
+                </button>
+
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs shrink-0"></i>
+
+                <button onclick="goToStep(3)" id="navStep3" class="flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-medium transition whitespace-nowrap text-slate-600 hover:bg-slate-100">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px] font-bold">3</span>
+                    <span>Select Objectives</span>
+                    <span id="badgeStep3" class="hidden text-[10px] bg-slate-700 text-white px-1.5 py-0.2 rounded-full">0</span>
+                </button>
+
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs shrink-0"></i>
+
+                <button onclick="goToStep(4)" id="navStep4" class="flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-medium transition whitespace-nowrap text-slate-600 hover:bg-slate-100">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px] font-bold">4</span>
+                    <span>Export</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========================================================================= -->
+    <!-- MAIN WORKSPACE CONTAINER                                                  -->
+    <!-- ========================================================================= -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full pb-24">
+
+        <!-- ===================================================================== -->
+        <!-- STEP 1: PRESENTING CONCERNS                                           -->
+        <!-- ===================================================================== -->
+        <section id="step1Section" class="space-y-5">
+            <!-- Intro & Search Header -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-seedling text-teal-600"></i>
+                            <span>Step 1: Select Presenting Concerns</span>
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">
+                            Choose the everyday concerns your client is bringing into therapy. Each card bridges plain-spoken intake language into clinical conceptualization.
+                        </p>
+                    </div>
+
+                    <!-- Live Keyword Search -->
+                    <div class="relative w-full md:w-80 shrink-0">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                        <input
+                            type="text"
+                            id="concernSearchInput"
+                            oninput="renderStep1()"
+                            placeholder="Search concerns or clinical concepts..."
+                            class="w-full text-xs pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none transition"
+                        >
+                        <button
+                            id="clearSearchBtn"
+                            onclick="clearSearch()"
+                            class="hidden absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 p-1"
+                            aria-label="Clear search"
+                        >
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Domain Filter Pills -->
+                <div class="pt-2 border-t border-slate-100">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Filter by Clinical Domain</span>
+                        <span id="visibleCountLabel" class="text-[11px] text-slate-500 font-medium">Showing 77 concerns</span>
+                    </div>
+                    <div id="domainFilterPills" class="flex flex-wrap gap-1.5">
+                        <!-- Dynamically rendered filter pills -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Presenting Concerns Grid -->
+            <div id="concernsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
+                <!-- Dynamically rendered single-idea cards -->
+            </div>
+
+            <!-- Empty Search State -->
+            <div id="concernsEmptyState" class="hidden bg-white p-10 rounded-2xl border border-slate-200 text-center space-y-3">
+                <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                    <i class="fa-solid fa-filter-circle-xmark text-lg"></i>
+                </div>
+                <h3 class="text-sm font-bold text-slate-800">No matching presenting concerns found</h3>
+                <p class="text-xs text-slate-500 max-w-md mx-auto">Try clearing your keyword search or selecting "All" to browse all 77 plain-spoken presenting concerns.</p>
+                <button onclick="resetStep1Filters()" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
+                    Reset Search & Filters
+                </button>
+            </div>
+
+            <!-- Bottom Navigation Row -->
+            <div class="flex justify-end pt-2">
+                <button onclick="goToStep(2)" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-2">
+                    <span>Continue to Select Goals</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- STEP 2: SELECT GOALS                                                  -->
+        <!-- ===================================================================== -->
+        <section id="step2Section" class="space-y-5 hidden">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-teal-600"></i>
+                        <span>Step 2: Select Clinical Goals</span>
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Select 3–4 overarching treatment goals rooted in humanistic, relational, and psychodynamic change processes. Shared goals stay synchronized automatically.
+                    </p>
+                </div>
+
+                <!-- Live Selected Goals Counter -->
+                <div id="goalCounterPill" class="px-3.5 py-2 rounded-xl text-xs font-bold border flex items-center gap-2 shrink-0 bg-amber-50 text-amber-800 border-amber-200">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span id="goalCounterText">Selected: 0 Goals (Target: 3–4)</span>
+                </div>
+            </div>
+
+            <!-- Goals Grouped by Selected Presenting Concern -->
+            <div id="goalsByConcernContainer" class="space-y-5">
+                <!-- Dynamically rendered -->
+            </div>
+
+            <!-- Step 2 Navigation Buttons -->
+            <div class="flex justify-between items-center pt-3">
+                <button onclick="goToStep(1)" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-5 py-2.5 rounded-xl font-semibold text-xs transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Presenting Concerns</span>
+                </button>
+                <button onclick="goToStep(3)" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-2">
+                    <span>Continue to Select Objectives</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- STEP 3: SELECT OBJECTIVES                                             -->
+        <!-- ===================================================================== -->
+        <section id="step3Section" class="space-y-5 hidden">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-teal-600"></i>
+                        <span>Step 3: Select Process Objectives</span>
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Choose 1–2 measurable process objectives per selected goal. Use the top header switch to toggle audit timeframes ON or OFF.
+                    </p>
+                </div>
+
+                <div class="px-3.5 py-2 rounded-xl text-xs font-bold bg-teal-50 text-teal-800 border border-teal-200 shrink-0">
+                    <span id="objectiveTotalCounter">Total Selected: 0 Objectives</span>
+                </div>
+            </div>
+
+            <!-- Objectives Grouped by Selected Goal -->
+            <div id="objectivesByGoalContainer" class="space-y-6">
+                <!-- Dynamically rendered -->
+            </div>
+
+            <!-- Step 3 Navigation Buttons -->
+            <div class="flex justify-between items-center pt-3">
+                <button onclick="goToStep(2)" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-5 py-2.5 rounded-xl font-semibold text-xs transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Select Goals</span>
+                </button>
+                <button onclick="goToStep(4)" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-2">
+                    <span>Continue to Export</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- STEP 4: EXPORT                                                        -->
+        <!-- ===================================================================== -->
+        <section id="step4Section" class="space-y-5 hidden">
+            <!-- Export Top Action Header -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 no-print">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-file-lines text-teal-600"></i>
+                        <span>Export</span>
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Click directly into any Goal, Objective, or Intervention below to refine wording inline. Individual copy buttons capture only the pure statement text without labels or prefixes.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+                    <button onclick="copyFullPlan()" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Copy Full Plan</span>
+                    </button>
+                    <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Print / Save PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Interactive Editable Export Cards -->
+            <div id="exportCardsContainer" class="space-y-6">
+                <!-- Dynamically rendered Goal -> Objective -> Intervention cards -->
+            </div>
+
+            <!-- Plain-Text Full Plan Preview -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden no-print">
+                <div class="px-5 py-3.5 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-align-left text-slate-500 text-xs"></i>
+                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Plain-Text Full Plan Preview</span>
+                    </div>
+                    <button onclick="copyFullPlan()" class="text-xs font-semibold text-teal-700 hover:text-teal-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Copy Full Plan</span>
+                    </button>
+                </div>
+                <pre id="fullPlanPlainPreview" class="p-5 text-xs font-mono text-slate-700 whitespace-pre-wrap leading-relaxed bg-slate-50/70 max-h-96 overflow-y-auto custom-scrollbar"></pre>
+            </div>
+
+            <!-- Step 4 Bottom Navigation -->
+            <div class="flex justify-between items-center pt-2 no-print">
+                <button onclick="goToStep(3)" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-5 py-2.5 rounded-xl font-semibold text-xs transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Select Objectives</span>
+                </button>
+                <button onclick="resetPlan()" class="text-xs font-semibold text-slate-500 hover:text-rose-600 transition flex items-center gap-1.5 px-3 py-2">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>Start New Plan</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- STICKY BOTTOM SELECTION SUMMARY BAR (STEPS 1–3)                           -->
+    <!-- ========================================================================= -->
+    <div id="stickySummaryBar" class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg py-3 px-4 sm:px-6 z-40 transition-transform duration-200 translate-y-full no-print">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-3 text-xs">
+                <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                    <span id="stickySummaryText">0 Concerns Selected</span>
+                </span>
+                <button onclick="clearCurrentStepSelections()" class="text-slate-400 hover:text-rose-600 underline text-[11px] font-medium">
+                    Clear selections
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button id="stickyNextBtn" onclick="advanceWizardStep()" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-xl font-semibold text-xs shadow-sm transition flex items-center gap-2">
+                    <span id="stickyNextLabel">Continue to Select Goals</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- FLOATING TOAST NOTIFICATION CONTAINER (BOTTOM-RIGHT)                      -->
+    <!-- ========================================================================= -->
+    <div id="toastContainer" class="fixed bottom-16 right-5 z-50 flex flex-col gap-2 pointer-events-none no-print"></div>
+
+    <!-- ========================================================================= -->
+    <!-- APPLICATION DATA & JAVASCRIPT ENGINE                                      -->
+    <!-- ========================================================================= -->
+    <script>
+        // =========================================================================
+        // 1. NORMALIZED OBJECTIVES & INTERVENTIONS DATABASE (96 DISTINCT ITEMS)
+        // =========================================================================
+        const OBJECTIVES_DB = {
+            // --- ANXIETY & SOMATIC REGULATION ---
+            "o_anx_1": {
+                id: "o_anx_1",
+                baseText: "Client will identify physiological and somatic cues of rising anxiety and articulate the underlying emotional trigger during sessions",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize somatic tracking and experiential body inquiry to assist client in recognizing early physiological markers of autonomic arousal.",
+                    "Clinician will facilitate emotion-focused reflection to help client link somatic tension with emergent affective states."
+                ]
+            },
+            "o_anx_2": {
+                id: "o_anx_2",
+                baseText: "Client will demonstrate the capacity to utilize grounding and breath-anchored somatic regulation during moments of acute distress",
+                metricClause: ", as reported across 4 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will guide experiential somatic grounding and affect-containment exercises during sessions to strengthen nervous system regulation.",
+                    "Clinician will explore internal relational safety cues to reduce automatic threat reactivity during high-arousal states."
+                ]
+            },
+            "o_anx_3": {
+                id: "o_anx_3",
+                baseText: "Client will distinguish between protective anticipatory worry and primary underlying vulnerability (such as grief, fear, or helplessness)",
+                metricClause: ", as demonstrated in bi-weekly clinical processing over the next 12 weeks",
+                interventions: [
+                    "Clinician will employ psychodynamic exploration to illuminate how chronic worrying functions as a protective shield against deeper emotional vulnerability.",
+                    "Clinician will provide empathic mirroring to support client in safely contacting and expressing primary vulnerable emotions."
+                ]
+            },
+            "o_anx_4": {
+                id: "o_anx_4",
+                baseText: "Client will explore developmental origins of chronic vigilance and cultivate self-reassuring internal dialogue during anxious episodes",
+                metricClause: ", as evidenced during monthly treatment reviews over a 90-day period",
+                interventions: [
+                    "Clinician will facilitate psychodynamic inquiry into early family environments that necessitated constant emotional scanning.",
+                    "Clinician will utilize Person-Centered unconditional positive regard to foster a calmer, self-compassionate internal holding environment."
+                ]
+            },
+            "o_anx_5": {
+                id: "o_anx_5",
+                baseText: "Client will remain emotionally present with bodily sensations during panic surges without resorting to dissociative escape or catastrophic self-judgment",
+                metricClause: ", as reported in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize titrated somatic experiencing to help client tolerate waves of autonomic activation safely.",
+                    "Clinician will normalize physiological fear responses and explore emotional themes preceding acute panic episodes."
+                ]
+            },
+            "o_anx_6": {
+                id: "o_anx_6",
+                baseText: "Client will identify unspoken emotional needs beneath somatic health preoccupations and articulate feelings directly in session",
+                metricClause: ", as evidenced in 3 out of 4 sessions over the next 12 weeks",
+                interventions: [
+                    "Clinician will explore the symbolic and affective meaning of somatic health fears using psychodynamic inquiry.",
+                    "Clinician will assist client in translating bodily distress into direct emotional and relational communication."
+                ]
+            },
+            "o_anx_7": {
+                id: "o_anx_7",
+                baseText: "Client will tolerate ambiguous or uncertain life situations without initiating compulsive reassurance-seeking or over-planning",
+                metricClause: ", as observed across 6 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will explore existential themes of uncertainty and control to build client tolerance for open-ended life experiences.",
+                    "Clinician will reinforce internal self-trust through Person-Centered reflection during moments of ambiguity."
+                ]
+            },
+            "o_anx_8": {
+                id: "o_anx_8",
+                baseText: "Client will engage in meaningful interpersonal interactions while maintaining internal self-anchoring despite fears of external judgment",
+                metricClause: ", as reported at least twice monthly over a 90-day period",
+                interventions: [
+                    "Clinician will explore projected self-criticism in social interactions using relational and psychodynamic reflection.",
+                    "Clinician will facilitate experiential focusing to help client stay connected to authentic self-experience around others."
+                ]
+            },
+
+            // --- DEPRESSION, VITALITY & AFFECTIVE PROCESSING ---
+            "o_dep_1": {
+                id: "o_dep_1",
+                baseText: "Client will identify and verbally express constricted or suppressed primary emotions (such as sadness, disappointment, or anger) connected to depressive mood",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize Emotion-Focused deepening interventions to help client access and symbolize muted affective states.",
+                    "Clinician will provide a non-judgmental holding environment that welcomes full emotional expression without premature problem-solving."
+                ]
+            },
+            "o_dep_2": {
+                id: "o_dep_2",
+                baseText: "Client will recognize moments of emotional numbing in session and explore the protective function of affective shutdown",
+                metricClause: ", as demonstrated across 4 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will gently track shifts into affective flatness in real time and invite curiosity about what feelings are being buffered.",
+                    "Clinician will employ phenomenological inquiry to reconnect client with subtle bodily and emotional nuances."
+                ]
+            },
+            "o_dep_3": {
+                id: "o_dep_3",
+                baseText: "Client will reconnect with intrinsic personal values and initiate self-chosen restorative activities that foster vitality and agency",
+                metricClause: ", as reported in bi-weekly clinical check-ins over the next 12 weeks",
+                interventions: [
+                    "Clinician will explore existential values and authentic desires to help client distinguish self-directed vitality from external obligation.",
+                    "Clinician will support client in reflecting on emotional experiences arising from renewed personal engagement."
+                ]
+            },
+            "o_dep_4": {
+                id: "o_dep_4",
+                baseText: "Client will examine internalized self-reproach and unexpressed anger turned inward that contribute to psychic exhaustion",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will facilitate psychodynamic exploration of retroflected anger and harsh internal expectations.",
+                    "Clinician will utilize two-chair dialogue to externalize self-critical voices and foster self-compassionate integration."
+                ]
+            },
+            "o_dep_5": {
+                id: "o_dep_5",
+                baseText: "Client will articulate feelings of internal emptiness or existential disconnection within the therapeutic relationship to foster emotional contact",
+                metricClause: ", as observed across 5 consecutive sessions",
+                interventions: [
+                    "Clinician will utilize relational immediacy and empathic attunement to help client feel seen and emotionally accompanied.",
+                    "Clinician will explore early relational experiences of emotional invisibility that shaped chronic feelings of emptiness."
+                ]
+            },
+            "o_dep_6": {
+                id: "o_dep_6",
+                baseText: "Client will identify relational fears driving social withdrawal and initiate low-pressure, authentic connection with trusted supports",
+                metricClause: ", as reported twice monthly over a 90-day treatment cycle",
+                interventions: [
+                    "Clinician will explore shame and fear of burdening others that reinforce depressive isolation.",
+                    "Clinician will assist client in clarifying genuine relational needs and pacing interpersonal re-engagement."
+                ]
+            },
+            "o_dep_7": {
+                id: "o_dep_7",
+                baseText: "Client will explore sources of hopelessness and identify emerging areas of personal meaning, choice, and agency",
+                metricClause: ", as evidenced in monthly clinical reviews over 90 days",
+                interventions: [
+                    "Clinician will engage client in existential exploration of personal agency and meaning-making amid life disillusionment.",
+                    "Clinician will offer Person-Centered empathic validation to hold despair while illuminating resilient client strengths."
+                ]
+            },
+
+            // --- OBSESSIONS, COMPULSIONS & CONTROL OPERATIONS ---
+            "o_ocd_1": {
+                id: "o_ocd_1",
+                baseText: "Client will identify the underlying emotional vulnerability or relational fear preceding spikes in intrusive thoughts or urges to ritualize",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize psychodynamic and emotion-focused inquiry to uncover the affective triggers masked by obsessional preoccupation.",
+                    "Clinician will help client recognize how compulsive urges serve as an attempt to regulate intolerable emotional uncertainty."
+                ]
+            },
+            "o_ocd_2": {
+                id: "o_ocd_2",
+                baseText: "Client will observe ego-dystonic intrusive thoughts with mindful curiosity while refraining from self-condemnation or moral fusion",
+                metricClause: ", as demonstrated across 4 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will foster Person-Centered self-acceptance to separate client's core character and values from intrusive mental content.",
+                    "Clinician will explore punitive superego dynamics that equate unwanted thoughts with moral danger."
+                ]
+            },
+            "o_ocd_3": {
+                id: "o_ocd_3",
+                baseText: "Client will tolerate emotional discomfort and somatic tension when delaying or refraining from compulsive checking or mental neutralizing",
+                metricClause: ", as reported in bi-weekly sessions over the next 12 weeks",
+                interventions: [
+                    "Clinician will guide somatic grounding and affect-tolerance support to help client ride out waves of anxiety without ritualizing.",
+                    "Clinician will explore the emotional relief sought through checking and cultivate internal self-trust."
+                ]
+            },
+            "o_ocd_4": {
+                id: "o_ocd_4",
+                baseText: "Client will explore developmental roots of rigid control, symmetry, or contamination fears as early adaptations to unpredictable environments",
+                metricClause: ", as evidenced during monthly treatment reviews over 90 days",
+                interventions: [
+                    "Clinician will facilitate psychodynamic exploration of early relational unpredictability and the compensatory need for strict order.",
+                    "Clinician will support client in grieving the illusion of absolute control while building present-day emotional safety."
+                ]
+            },
+            "o_ocd_5": {
+                id: "o_ocd_5",
+                baseText: "Client will recognize when perfectionistic over-control is activated by fear of vulnerability, rejection, or making mistakes",
+                metricClause: ", as observed in 3 out of 4 sessions over a 90-day period",
+                interventions: [
+                    "Clinician will utilize Emotion-Focused self-interruption work to soften rigid perfectionistic demands.",
+                    "Clinician will reinforce self-compassionate tolerance for human imperfection within the therapeutic relationship."
+                ]
+            },
+
+            // --- TRAUMATIC EVENTS & POST-TRAUMATIC INTEGRATION ---
+            "o_trm_1": {
+                id: "o_trm_1",
+                baseText: "Client will track somatic and emotional activation when approaching traumatic memories and utilize grounding to remain within a regulated window of tolerance",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize titrated somatic pendulation and present-moment anchoring to prevent emotional flooding during trauma processing.",
+                    "Clinician will pace narrative exploration collaboratively to preserve client agency and felt safety."
+                ]
+            },
+            "o_trm_2": {
+                id: "o_trm_2",
+                baseText: "Client will distinguish past traumatic threat from present-day safety cues to reduce chronic hypervigilance and startle reactivity",
+                metricClause: ", as reported across 5 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will facilitate somatic orienting and relational safety exploration to help the nervous system register current safety.",
+                    "Clinician will explore ongoing protective hypervigilance with compassion for its survival origins."
+                ]
+            },
+            "o_trm_3": {
+                id: "o_trm_3",
+                baseText: "Client will process unintegrated emotions (such as terror, helplessness, grief, or outrage) connected to traumatic events in a supportive therapeutic container",
+                metricClause: ", as evidenced in bi-weekly sessions over the next 12 weeks",
+                interventions: [
+                    "Clinician will provide a steady, empathic holding environment to facilitate emotional symbolization and integration of traumatic impact.",
+                    "Clinician will utilize Emotion-Focused validation to release trauma-related self-blame and helplessness."
+                ]
+            },
+            "o_trm_4": {
+                id: "o_trm_4",
+                baseText: "Client will identify dissociative detachment following trauma triggers and apply sensory grounding to restore embodied presence",
+                metricClause: ", as observed in 3 out of 4 sessions over 90 days",
+                interventions: [
+                    "Clinician will monitor subtle signs of peritraumatic dissociation in session and gently guide sensory re-anchoring.",
+                    "Clinician will explore the protective wisdom of dissociation while expanding capacity for safe embodiment."
+                ]
+            },
+            "o_trm_5": {
+                id: "o_trm_5",
+                baseText: "Client will explore how trauma avoidance has constricted daily life and gradually reclaim valued relational and personal experiences",
+                metricClause: ", as reviewed monthly over a 90-day treatment cycle",
+                interventions: [
+                    "Clinician will explore existential losses caused by trauma avoidance and support self-paced re-engagement with life.",
+                    "Clinician will reinforce client autonomy and self-efficacy at each step of recovery."
+                ]
+            },
+
+            // --- DEVELOPMENTAL TRAUMA & CORE ATTACHMENT WOUNDS ---
+            "o_dev_1": {
+                id: "o_dev_1",
+                baseText: "Client will identify the emotional impact of childhood emotional neglect and validate previously unmet developmental needs for attunement",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize psychodynamic and attachment-informed reflection to name early relational omissions and emotional deprivation.",
+                    "Clinician will offer consistent empathic attunement to provide a corrective relational experience."
+                ]
+            },
+            "o_dev_2": {
+                id: "o_dev_2",
+                baseText: "Client will recognize hyper-adaptive 'walking on eggshells' vigilance in current relationships and practice staying grounded in personal reality",
+                metricClause: ", as demonstrated across 4 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will help client differentiate past unpredictable caregivers from present-day relational partners.",
+                    "Clinician will reinforce internal self-anchoring so client does not automatically absorb others' moods."
+                ]
+            },
+            "o_dev_3": {
+                id: "o_dev_3",
+                baseText: "Client will externalize core shame and defectiveness beliefs rooted in early upbringing and cultivate a compassionate internal stance",
+                metricClause: ", as evidenced in bi-weekly processing over the next 12 weeks",
+                interventions: [
+                    "Clinician will employ Emotion-Focused chair work to transform internalized shame into protective anger and self-compassion.",
+                    "Clinician will utilize Person-Centered unconditional positive regard to counter chronic shame-based self-rejection."
+                ]
+            },
+            "o_dev_4": {
+                id: "o_dev_4",
+                baseText: "Client will notice fawning or over-accommodating impulses in real time and articulate authentic personal preferences without excessive guilt",
+                metricClause: ", as reported in 3 out of 4 sessions over a 90-day period",
+                interventions: [
+                    "Clinician will explore fawning as an intelligent childhood survival strategy while supporting present-day relational authenticity.",
+                    "Clinician will invite client to practice voicing honest preferences and disagreements safely within the therapy relationship."
+                ]
+            },
+            "o_dev_5": {
+                id: "o_dev_5",
+                baseText: "Client will assess relational trustworthiness gradually rather than defaulting to total guardedness or premature vulnerability",
+                metricClause: ", as observed during monthly clinical reviews over 90 days",
+                interventions: [
+                    "Clinician will explore transference expectations of betrayal or abandonment within the therapeutic alliance.",
+                    "Clinician will assist client in identifying concrete indicators of emotional safety and reciprocity in relationships."
+                ]
+            },
+            "o_dev_6": {
+                id: "o_dev_6",
+                baseText: "Client will recognize protective emotional dissociation during relational stress and practice remaining connected to felt bodily experience",
+                metricClause: ", as evidenced in 3 out of 4 sessions over 90 days",
+                interventions: [
+                    "Clinician will utilize gentle somatic tracking and relational check-ins when client begins to space out or numb emotionally.",
+                    "Clinician will foster a paced, safe environment where overwhelming childhood affect can be integrated gradually."
+                ]
+            },
+
+            // --- EXECUTIVE FUNCTIONING & PSYCHIC ENERGY REGULATION ---
+            "o_exe_1": {
+                id: "o_exe_1",
+                baseText: "Client will identify the underlying emotional states (such as fear of failure, shame, or overwhelm) triggering task initiation paralysis and procrastination",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize emotion-focused inquiry to reframe procrastination from moral failure to an affective protection response.",
+                    "Clinician will help client process performance shame and perfectionistic dread blocking task engagement."
+                ]
+            },
+            "o_exe_2": {
+                id: "o_exe_2",
+                baseText: "Client will practice somatic grounding and compassionate self-pacing when experiencing cognitive overload or mental clutter",
+                metricClause: ", as reported across 4 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will guide present-moment somatic slowing to help client discharge autonomic overwhelm during cognitive fragmentation.",
+                    "Clinician will utilize Person-Centered reflection to support realistic, humane self-expectations."
+                ]
+            },
+            "o_exe_3": {
+                id: "o_exe_3",
+                baseText: "Client will resolve decision fatigue by clarifying core personal values and tolerating the anxiety of making imperfect choices",
+                metricClause: ", as evidenced in bi-weekly clinical sessions over the next 12 weeks",
+                interventions: [
+                    "Clinician will explore existential themes of choice, responsibility, and relinquishing impossible certainty.",
+                    "Clinician will assist client in accessing intuitive, values-aligned preferences rather than over-analyzing options."
+                ]
+            },
+            "o_exe_4": {
+                id: "o_exe_4",
+                baseText: "Client will explore internalized critical voices around productivity and develop self-supporting rhythms aligned with energy capacity",
+                metricClause: ", as reviewed monthly over a 90-day treatment period",
+                interventions: [
+                    "Clinician will facilitate psychodynamic exploration of conditional self-worth tied to relentless productivity.",
+                    "Clinician will support client in establishing sustainable, shame-free approaches to organizing daily priorities."
+                ]
+            },
+
+            // --- GRIEF, BEREAVEMENT & LIFE TRANSITIONS ---
+            "o_grf_1": {
+                id: "o_grf_1",
+                baseText: "Client will express complex bereavement emotions (including sorrow, longing, anger, and guilt) within a supportive therapeutic space",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will offer a compassionate holding environment and empathic presence for unhurried grief processing.",
+                    "Clinician will validate the non-linear waves of mourning without imposing artificial timelines."
+                ]
+            },
+            "o_grf_2": {
+                id: "o_grf_2",
+                baseText: "Client will explore unfinished emotional business or ambivalent feelings toward a lost loved one or ended relationship",
+                metricClause: ", as demonstrated in bi-weekly sessions over the next 12 weeks",
+                interventions: [
+                    "Clinician will utilize Emotion-Focused empty-chair dialogue to facilitate expression of unspoken grief, anger, and love.",
+                    "Clinician will help client integrate complex memories and release self-blame surrounding the loss."
+                ]
+            },
+            "o_grf_3": {
+                id: "o_grf_3",
+                baseText: "Client will mourn disenfranchised losses and missed developmental life stages while cultivating self-compassion for their life path",
+                metricClause: ", as evidenced in 3 out of 4 sessions over 90 days",
+                interventions: [
+                    "Clinician will utilize existential and humanistic inquiry to honor grief for unlived possibilities and lost time.",
+                    "Clinician will support client in grieving what was missing while affirming present capacity for meaning."
+                ]
+            },
+            "o_grf_4": {
+                id: "o_grf_4",
+                baseText: "Client will articulate fears and sorrow associated with anticipatory grief while remaining emotionally present in current relationships",
+                metricClause: ", as observed across 4 consecutive sessions",
+                interventions: [
+                    "Clinician will provide empathic accompaniment as client processes impending loss and role transition.",
+                    "Clinician will help client balance grief preparation with meaningful present-moment connection."
+                ]
+            },
+            "o_grf_5": {
+                id: "o_grf_5",
+                baseText: "Client will reconstruct a coherent sense of identity and ongoing personal meaning following significant relational or life loss",
+                metricClause: ", as reviewed monthly over a 90-day treatment cycle",
+                interventions: [
+                    "Clinician will explore existential identity shifts following loss and support gradual integration of continuing bonds.",
+                    "Clinician will foster Person-Centered self-discovery as client navigates emerging life chapters."
+                ]
+            },
+
+            // --- FAMILY OF ORIGIN & INTERGENERATIONAL DYNAMICS ---
+            "o_fam_1": {
+                id: "o_fam_1",
+                baseText: "Client will identify family-of-origin enmeshment patterns and articulate personal thoughts and feelings distinct from family expectations",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize psychodynamic and systemic inquiry to illuminate unspoken family loyalties and emotional fusion.",
+                    "Clinician will support self-differentiation by validating client's right to an autonomous emotional reality."
+                ]
+            },
+            "o_fam_2": {
+                id: "o_fam_2",
+                baseText: "Client will process grief, guilt, and boundary clarity surrounding estrangement or limited contact with family members",
+                metricClause: ", as demonstrated in bi-weekly clinical processing over 12 weeks",
+                interventions: [
+                    "Clinician will provide non-judgmental empathic support to process the complex grief of relational estrangement.",
+                    "Clinician will help client distinguish healthy self-protection from internalized family guilt."
+                ]
+            },
+            "o_fam_3": {
+                id: "o_fam_3",
+                baseText: "Client will recognize compulsive parentified caretaking impulses within their family and practice delegating emotional responsibility",
+                metricClause: ", as reported in 3 out of 4 sessions over a 90-day period",
+                interventions: [
+                    "Clinician will explore early family roles where client learned to prioritize others' emotional regulation over their own.",
+                    "Clinician will assist client in tolerating the discomfort of stepping back from over-functioning."
+                ]
+            },
+            "o_fam_4": {
+                id: "o_fam_4",
+                baseText: "Client will examine unresolved sibling comparison or family-of-origin roles and establish grounded adult boundaries",
+                metricClause: ", as reviewed monthly over a 90-day period",
+                interventions: [
+                    "Clinician will facilitate psychodynamic exploration of early sibling dynamics and unmet needs for parental recognition.",
+                    "Clinician will support client in defining adult relational boundaries aligned with present values."
+                ]
+            },
+            "o_fam_5": {
+                id: "o_fam_5",
+                baseText: "Client will navigate caregiving and role reversals with aging parents while honoring personal emotional limits and grief",
+                metricClause: ", as evidenced in bi-weekly sessions over 90 days",
+                interventions: [
+                    "Clinician will explore mixed emotions of love, resentment, and anticipatory grief arising in intergenerational caregiving.",
+                    "Clinician will help client articulate sustainable limits while maintaining personal integrity."
+                ]
+            },
+
+            // --- INTIMATE RELATIONSHIPS & COUPLES ATTACHMENT ---
+            "o_rel_1": {
+                id: "o_rel_1",
+                baseText: "Client will map recurring interpersonal conflict cycles and identify the primary attachment vulnerability beneath reactive anger or withdrawal",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize Emotion-Focused cycle tracking to distinguish secondary reactive defenses from primary attachment needs.",
+                    "Clinician will assist client in expressing softer emotions (such as fear of rejection or longing for closeness) clearly."
+                ]
+            },
+            "o_rel_2": {
+                id: "o_rel_2",
+                baseText: "Client will initiate vulnerable emotional sharing with their partner to repair distance and deepen mutual relational attunement",
+                metricClause: ", as reported at least twice monthly over a 12-week period",
+                interventions: [
+                    "Clinician will explore fears of emotional exposure that maintain protective distance in intimate partnerships.",
+                    "Clinician will facilitate experiential rehearsal of clear, non-defensive vulnerability."
+                ]
+            },
+            "o_rel_3": {
+                id: "o_rel_3",
+                baseText: "Client will process attachment trauma, grief, and hypervigilance following relational betrayal while rebuilding internal emotional stability",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day period",
+                interventions: [
+                    "Clinician will provide a stabilizing holding environment to process acute betrayal shock, grief, and shattered relational assumptions.",
+                    "Clinician will support client in clarifying personal boundaries and criteria for discerning trust."
+                ]
+            },
+            "o_rel_4": {
+                id: "o_rel_4",
+                baseText: "Client will recognize anxious abandonment triggers in real time and practice self-soothing before engaging in protest or clinging behaviors",
+                metricClause: ", as demonstrated across 4 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will explore early attachment wounds activated by perceived relational distance or ambiguity.",
+                    "Clinician will guide somatic self-anchoring to help client regulate abandonment panic internally."
+                ]
+            },
+            "o_rel_5": {
+                id: "o_rel_5",
+                baseText: "Client will identify fears of engulfment or loss of autonomy in close relationships and communicate boundary needs without abrupt distancing",
+                metricClause: ", as observed in 3 out of 4 sessions over 90 days",
+                interventions: [
+                    "Clinician will explore psychodynamic fears of losing selfhood through emotional intimacy.",
+                    "Clinician will support client in negotiating healthy space and closeness within relationships."
+                ]
+            },
+            "o_rel_6": {
+                id: "o_rel_6",
+                baseText: "Client will identify codependent self-abandonment patterns and maintain awareness of personal needs alongside care for a partner",
+                metricClause: ", as reviewed monthly over a 90-day treatment cycle",
+                interventions: [
+                    "Clinician will explore relational beliefs equating self-worth with rescuing or over-functioning for partners.",
+                    "Clinician will reinforce interdependent relating anchored in mutual respect and personal agency."
+                ]
+            },
+
+            // --- PARENTING & INTERGENERATIONAL CAREGIVING ---
+            "o_par_1": {
+                id: "o_par_1",
+                baseText: "Client will recognize early somatic and emotional signs of parental burnout and implement restorative boundaries without excessive self-reproach",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will explore unrealistic cultural and internalized ideals of self-sacrificial parenting.",
+                    "Clinician will support client in reclaiming personal restoration as essential to emotional availability."
+                ]
+            },
+            "o_par_2": {
+                id: "o_par_2",
+                baseText: "Client will examine chronic parenting guilt and cultivate a compassionate, 'good-enough' internal standard of caregiving",
+                metricClause: ", as demonstrated across 4 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will utilize Person-Centered reflection and Winnicottian 'good-enough' framing to soften punitive parental guilt.",
+                    "Clinician will help client focus on relational repair rather than unattainable perfection."
+                ]
+            },
+            "o_par_3": {
+                id: "o_par_3",
+                baseText: "Client will identify moments when a child's distress triggers the client's own childhood wounds and practice grounded emotional regulation",
+                metricClause: ", as evidenced in bi-weekly processing over the next 12 weeks",
+                interventions: [
+                    "Clinician will facilitate psychodynamic reflection on intergenerational 'ghosts in the nursery' activated during parenting stress.",
+                    "Clinician will guide somatic grounding to help client respond to their child from present adult agency."
+                ]
+            },
+            "o_par_4": {
+                id: "o_par_4",
+                baseText: "Client will navigate co-parenting disagreements or a child's developmental struggles with clear emotional boundaries and self-compassion",
+                metricClause: ", as reviewed monthly over a 90-day period",
+                interventions: [
+                    "Clinician will explore feelings of parental helplessness and grief when a child experiences distress or developmental transition.",
+                    "Clinician will assist client in maintaining grounded communication and clarity around personal locus of control."
+                ]
+            },
+
+            // --- WORK, VOCATION & AUTHORITY DYNAMICS ---
+            "o_wrk_1": {
+                id: "o_wrk_1",
+                baseText: "Client will establish sustainable boundaries between occupational demands and personal identity to recover from workplace burnout",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will explore over-identification with professional performance and the emotional fears driving chronic overwork.",
+                    "Clinician will support client in reclaiming non-work identity, rest, and relational presence."
+                ]
+            },
+            "o_wrk_2": {
+                id: "o_wrk_2",
+                baseText: "Client will identify imposter feelings at work and integrate objective competence with internal self-worth",
+                metricClause: ", as demonstrated across 4 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will explore developmental and relational roots of feeling like a fraud despite demonstrated capability.",
+                    "Clinician will utilize Person-Centered mirroring to strengthen an internal locus of evaluation."
+                ]
+            },
+            "o_wrk_3": {
+                id: "o_wrk_3",
+                baseText: "Client will recognize transference reactions toward workplace authority figures and communicate needs with grounded adult agency",
+                metricClause: ", as evidenced in bi-weekly sessions over the next 12 weeks",
+                interventions: [
+                    "Clinician will facilitate psychodynamic exploration of how early authority relationships shape present-day workplace fear or rebellion.",
+                    "Clinician will support assertive, self-respecting communication within professional systems."
+                ]
+            },
+            "o_wrk_4": {
+                id: "o_wrk_4",
+                baseText: "Client will clarify core existential values and personal direction amid career uncertainty or toxic workplace stress",
+                metricClause: ", as reviewed monthly over a 90-day period",
+                interventions: [
+                    "Clinician will engage client in existential reflection on vocational meaning, authenticity, and personal agency.",
+                    "Clinician will assist client in evaluating workplace boundaries and aligned next steps."
+                ]
+            },
+
+            // --- SELF-WORTH, EXISTENTIAL IDENTITY & DEFENSE OPERATIONS ---
+            "o_slf_1": {
+                id: "o_slf_1",
+                baseText: "Client will catch punitive inner-critic narratives in session and respond with self-compassionate, reality-grounded perspective",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize Emotion-Focused two-chair dialogue to differentiate the harsh inner critic from the experiencing self.",
+                    "Clinician will explore whose historical voice the inner critic echoes and cultivate internal self-acceptance."
+                ]
+            },
+            "o_slf_2": {
+                id: "o_slf_2",
+                baseText: "Client will identify people-pleasing impulses in real time and articulate authentic personal desires without seeking external approval",
+                metricClause: ", as demonstrated across 4 consecutive weekly sessions",
+                interventions: [
+                    "Clinician will utilize Person-Centered reflection to strengthen client's internal locus of evaluation.",
+                    "Clinician will explore fears of rejection or conflict that drive habitual compliance."
+                ]
+            },
+            "o_slf_3": {
+                id: "o_slf_3",
+                baseText: "Client will articulate core personal values, identity facets, and existential meaning independent of external roles",
+                metricClause: ", as evidenced in bi-weekly sessions over the next 12 weeks",
+                interventions: [
+                    "Clinician will employ phenomenological and existential inquiry to help client contact authentic inner experiencing.",
+                    "Clinician will support self-actualization and congruent self-expression across life domains."
+                ]
+            },
+            "o_slf_4": {
+                id: "o_slf_4",
+                baseText: "Client will notice defensive intellectualization in session and pivot toward direct somatic and emotional experiencing",
+                metricClause: ", as observed in 3 out of 4 sessions over a 90-day period",
+                interventions: [
+                    "Clinician will gently highlight shifts into abstract analysis and invite client to notice felt bodily emotion.",
+                    "Clinician will honor the protective function of intellect while creating safety for affective vulnerability."
+                ]
+            },
+            "o_slf_5": {
+                id: "o_slf_5",
+                baseText: "Client will recognize relational shutdown or freeze defenses during conflict and remain verbally engaged in expressing feelings",
+                metricClause: ", as reported at least twice monthly over a 90-day review period",
+                interventions: [
+                    "Clinician will explore early relational experiences where conflict felt unsafe or overwhelming.",
+                    "Clinician will utilize relational immediacy to help client practice staying emotionally present during moments of tension."
+                ]
+            },
+            "o_slf_6": {
+                id: "o_slf_6",
+                baseText: "Client will practice saying 'no' and setting clear interpersonal limits aligned with personal capacity and values",
+                metricClause: ", as reported in bi-weekly clinical check-ins over 12 weeks",
+                interventions: [
+                    "Clinician will explore unconscious guilt and fear of abandonment linked to boundary setting.",
+                    "Clinician will reinforce client's right to protect personal time, energy, and emotional boundaries."
+                ]
+            },
+            "o_slf_7": {
+                id: "o_slf_7",
+                baseText: "Client will identify early somatic signals of anger and express boundary needs assertively rather than through explosive discharge or suppression",
+                metricClause: ", as evidenced in 3 out of 4 sessions over a 90-day review period",
+                interventions: [
+                    "Clinician will utilize Emotion-Focused work to validate adaptive anger as a healthy boundary signal.",
+                    "Clinician will explore childhood messages around anger to release shame and build constructive emotional expression."
+                ]
+            }
+        };
+
+        // =========================================================================
+        // 2. NORMALIZED CLINICAL GOALS DATABASE (52 DISTINCT GOALS)
+        //    Every goal maps to 4 distinct process-based objectives.
+        // =========================================================================
+        const GOALS_DB = {
+            // --- ANXIETY & SOMATIC REGULATION ---
+            "g_anx_1": {
+                id: "g_anx_1",
+                domainTag: "Anxiety & Somatic Regulation",
+                text: "Client will expand somatic affect tolerance and reduce baseline autonomic hyperarousal during daily stressors.",
+                objectiveIds: ["o_anx_1", "o_anx_2", "o_anx_4", "o_anx_5"]
+            },
+            "g_anx_2": {
+                id: "g_anx_2",
+                domainTag: "Anxiety & Somatic Regulation",
+                text: "Client will explore unconscious emotional vulnerabilities underlying chronic worry and catastrophic anticipation.",
+                objectiveIds: ["o_anx_3", "o_anx_1", "o_anx_4", "o_anx_7"]
+            },
+            "g_anx_3": {
+                id: "g_anx_3",
+                domainTag: "Anxiety & Somatic Regulation",
+                text: "Client will cultivate grounded internal safety to decrease acute panic reactivity and somatic alarm states.",
+                objectiveIds: ["o_anx_5", "o_anx_2", "o_anx_1", "o_anx_6"]
+            },
+            "g_anx_4": {
+                id: "g_anx_4",
+                domainTag: "Anxiety & Somatic Regulation",
+                text: "Client will increase emotional tolerance for ambiguity and uncertainty without relying on hyper-vigilant control.",
+                objectiveIds: ["o_anx_7", "o_anx_3", "o_ocd_5", "o_anx_2"]
+            },
+            "g_anx_5": {
+                id: "g_anx_5",
+                domainTag: "Anxiety & Somatic Regulation",
+                text: "Client will reduce interpersonal evaluation anxiety by strengthening internal self-anchoring in social contexts.",
+                objectiveIds: ["o_anx_8", "o_slf_2", "o_anx_1", "o_slf_1"]
+            },
+
+            // --- DEPRESSION, VITALITY & AFFECTIVE PROCESSING ---
+            "g_dep_1": {
+                id: "g_dep_1",
+                domainTag: "Depression & Affective Processing",
+                text: "Client will process constricted or blocked primary affect to alleviate persistent depressive mood and restore vital engagement.",
+                objectiveIds: ["o_dep_1", "o_dep_2", "o_dep_3", "o_dep_4"]
+            },
+            "g_dep_2": {
+                id: "g_dep_2",
+                domainTag: "Depression & Affective Processing",
+                text: "Client will reconnect with authentic personal agency, intrinsic values, and self-directed vitality to counter emotional numbness.",
+                objectiveIds: ["o_dep_2", "o_dep_3", "o_dep_5", "o_slf_3"]
+            },
+            "g_dep_3": {
+                id: "g_dep_3",
+                domainTag: "Depression & Affective Processing",
+                text: "Client will explore internalized relational losses and self-directed anger contributing to chronic psychic exhaustion.",
+                objectiveIds: ["o_dep_4", "o_dep_1", "o_slf_7", "o_dep_3"]
+            },
+            "g_dep_4": {
+                id: "g_dep_4",
+                domainTag: "Depression & Affective Processing",
+                text: "Client will alleviate pervasive feelings of internal emptiness by deepening emotional contact with self and others.",
+                objectiveIds: ["o_dep_5", "o_dep_2", "o_dev_1", "o_dep_6"]
+            },
+            "g_dep_5": {
+                id: "g_dep_5",
+                domainTag: "Depression & Affective Processing",
+                text: "Client will counteract relational withdrawal and hopelessness by cultivating safe connection and personal meaning.",
+                objectiveIds: ["o_dep_6", "o_dep_7", "o_dep_3", "o_dep_5"]
+            },
+
+            // --- OBSESSIONS, COMPULSIONS & CONTROL OPERATIONS ---
+            "g_ocd_1": {
+                id: "g_ocd_1",
+                domainTag: "Obsessions & Control Operations",
+                text: "Client will explore the protective emotional function of intrusive thoughts and compulsive rituals to reduce anxiety-driven neutralizing.",
+                objectiveIds: ["o_ocd_1", "o_ocd_2", "o_ocd_3", "o_ocd_4"]
+            },
+            "g_ocd_2": {
+                id: "g_ocd_2",
+                domainTag: "Obsessions & Control Operations",
+                text: "Client will increase emotional tolerance for ego-dystonic intrusive thoughts without engaging in covert mental rituals or compulsive checking.",
+                objectiveIds: ["o_ocd_2", "o_ocd_3", "o_ocd_1", "o_anx_7"]
+            },
+            "g_ocd_3": {
+                id: "g_ocd_3",
+                domainTag: "Obsessions & Control Operations",
+                text: "Client will soften rigid perfectionistic control strategies by processing underlying fears of vulnerability, imperfection, and loss of safety.",
+                objectiveIds: ["o_ocd_5", "o_ocd_4", "o_slf_1", "o_anx_7"]
+            },
+            "g_ocd_4": {
+                id: "g_ocd_4",
+                domainTag: "Obsessions & Control Operations",
+                text: "Client will separate core self-identity from intrusive cognitive content to reduce shame and compulsive self-monitoring.",
+                objectiveIds: ["o_ocd_2", "o_ocd_1", "o_slf_1", "o_anx_2"]
+            },
+
+            // --- TRAUMATIC EVENTS & POST-TRAUMATIC INTEGRATION ---
+            "g_trm_1": {
+                id: "g_trm_1",
+                domainTag: "Trauma & Somatic Integration",
+                text: "Client will integrate unassimilated traumatic memories within an emotionally regulated window of tolerance to reduce intrusive re-experiencing.",
+                objectiveIds: ["o_trm_1", "o_trm_2", "o_trm_3", "o_trm_4"]
+            },
+            "g_trm_2": {
+                id: "g_trm_2",
+                domainTag: "Trauma & Somatic Integration",
+                text: "Client will restore somatic safety and decrease post-traumatic hypervigilance and autonomic threat scanning.",
+                objectiveIds: ["o_trm_2", "o_trm_1", "o_anx_2", "o_trm_4"]
+            },
+            "g_trm_3": {
+                id: "g_trm_3",
+                domainTag: "Trauma & Somatic Integration",
+                text: "Client will reduce dissociative detachment following acute shock by rebuilding grounded present-moment somatic awareness.",
+                objectiveIds: ["o_trm_4", "o_trm_1", "o_dev_6", "o_anx_2"]
+            },
+            "g_trm_4": {
+                id: "g_trm_4",
+                domainTag: "Trauma & Somatic Integration",
+                text: "Client will process traumatic grief and protective avoidance patterns to restore engagement in meaningful daily living.",
+                objectiveIds: ["o_trm_3", "o_trm_5", "o_trm_1", "o_grf_1"]
+            },
+
+            // --- DEVELOPMENTAL TRAUMA & CORE ATTACHMENT WOUNDS ---
+            "g_dev_1": {
+                id: "g_dev_1",
+                domainTag: "Developmental Trauma & Attachment",
+                text: "Client will heal early attachment and emotional attunement deficits by cultivating internal self-compassion and emotional validation.",
+                objectiveIds: ["o_dev_1", "o_dev_3", "o_dep_5", "o_slf_1"]
+            },
+            "g_dev_2": {
+                id: "g_dev_2",
+                domainTag: "Developmental Trauma & Attachment",
+                text: "Client will dismantle chronic hyper-adaptive vigilance and fawning survival patterns to support authentic self-expression.",
+                objectiveIds: ["o_dev_2", "o_dev_4", "o_slf_2", "o_slf_6"]
+            },
+            "g_dev_3": {
+                id: "g_dev_3",
+                domainTag: "Developmental Trauma & Attachment",
+                text: "Client will transform core internalized shame and defectiveness schemas into an integrated sense of inherent worth.",
+                objectiveIds: ["o_dev_3", "o_dev_1", "o_slf_1", "o_slf_2"]
+            },
+            "g_dev_4": {
+                id: "g_dev_4",
+                domainTag: "Developmental Trauma & Attachment",
+                text: "Client will develop earned relational security and discerning trust to reduce chronic interpersonal guardedness.",
+                objectiveIds: ["o_dev_5", "o_dev_2", "o_rel_4", "o_rel_5"]
+            },
+            "g_dev_5": {
+                id: "g_dev_5",
+                domainTag: "Developmental Trauma & Attachment",
+                text: "Client will decrease protective emotional dissociation by safely titrating contact with previously overwhelming affect.",
+                objectiveIds: ["o_dev_6", "o_trm_4", "o_dep_2", "o_anx_2"]
+            },
+
+            // --- EXECUTIVE FUNCTIONING & PSYCHIC ENERGY REGULATION ---
+            "g_exe_1": {
+                id: "g_exe_1",
+                domainTag: "Executive Functioning & Psychic Energy",
+                text: "Client will explore emotional and relational roots of task paralysis and chronic procrastination to restore purposeful self-initiation.",
+                objectiveIds: ["o_exe_1", "o_exe_2", "o_exe_4", "o_ocd_5"]
+            },
+            "g_exe_2": {
+                id: "g_exe_2",
+                domainTag: "Executive Functioning & Psychic Energy",
+                text: "Client will reduce cognitive overwhelm and mental fragmentation by cultivating grounded somatic pacing and internal clarity.",
+                objectiveIds: ["o_exe_2", "o_exe_1", "o_exe_3", "o_anx_2"]
+            },
+            "g_exe_3": {
+                id: "g_exe_3",
+                domainTag: "Executive Functioning & Psychic Energy",
+                text: "Client will alleviate decision paralysis by strengthening trust in internal intuition and tolerating imperfect outcomes.",
+                objectiveIds: ["o_exe_3", "o_anx_7", "o_exe_1", "o_slf_2"]
+            },
+            "g_exe_4": {
+                id: "g_exe_4",
+                domainTag: "Executive Functioning & Psychic Energy",
+                text: "Client will address internalized performance pressure and fear of evaluation underlying attentional avoidance and depletion.",
+                objectiveIds: ["o_exe_4", "o_exe_1", "o_slf_1", "o_wrk_2"]
+            },
+
+            // --- GRIEF, BEREAVEMENT & LIFE TRANSITIONS ---
+            "g_grf_1": {
+                id: "g_grf_1",
+                domainTag: "Grief & Life Transitions",
+                text: "Client will process complex bereavement affect and integrate significant relational loss into an evolving narrative of self.",
+                objectiveIds: ["o_grf_1", "o_grf_2", "o_grf_5", "o_dep_1"]
+            },
+            "g_grf_2": {
+                id: "g_grf_2",
+                domainTag: "Grief & Life Transitions",
+                text: "Client will resolve complicated or inhibited mourning by giving voice to ambivalent, unspoken, or painful emotions surrounding loss.",
+                objectiveIds: ["o_grf_2", "o_grf_1", "o_grf_5", "o_dep_4"]
+            },
+            "g_grf_3": {
+                id: "g_grf_3",
+                domainTag: "Grief & Life Transitions",
+                text: "Client will grieve unlived possibilities and missed developmental milestones to foster acceptance and present-moment vitality.",
+                objectiveIds: ["o_grf_3", "o_grf_5", "o_dep_7", "o_slf_3"]
+            },
+            "g_grf_4": {
+                id: "g_grf_4",
+                domainTag: "Grief & Life Transitions",
+                text: "Client will navigate anticipatory grief and relational transition with emotional presence, support, and self-compassion.",
+                objectiveIds: ["o_grf_4", "o_grf_1", "o_grf_5", "o_fam_5"]
+            },
+
+            // --- FAMILY OF ORIGIN & INTERGENERATIONAL DYNAMICS ---
+            "g_fam_1": {
+                id: "g_fam_1",
+                domainTag: "Family of Origin & Differentiation",
+                text: "Client will strengthen healthy differentiation of self from family-of-origin emotional enmeshment while preserving personal integrity.",
+                objectiveIds: ["o_fam_1", "o_fam_3", "o_slf_6", "o_slf_2"]
+            },
+            "g_fam_2": {
+                id: "g_fam_2",
+                domainTag: "Family of Origin & Differentiation",
+                text: "Client will process emotional grief, guilt, and boundary clarity surrounding family estrangement or relational cut-off.",
+                objectiveIds: ["o_fam_2", "o_grf_2", "o_fam_1", "o_slf_6"]
+            },
+            "g_fam_3": {
+                id: "g_fam_3",
+                domainTag: "Family of Origin & Differentiation",
+                text: "Client will release chronic parentified caretaking roles to reclaim personal needs, autonomy, and emotional reciprocity.",
+                objectiveIds: ["o_fam_3", "o_fam_1", "o_dev_4", "o_rel_6"]
+            },
+            "g_fam_4": {
+                id: "g_fam_4",
+                domainTag: "Family of Origin & Differentiation",
+                text: "Client will navigate intergenerational role shifts and sibling dynamics with grounded emotional boundaries and self-awareness.",
+                objectiveIds: ["o_fam_4", "o_fam_5", "o_fam_1", "o_slf_6"]
+            },
+
+            // --- INTIMATE RELATIONSHIPS & COUPLES ATTACHMENT ---
+            "g_rel_1": {
+                id: "g_rel_1",
+                domainTag: "Intimate Relationships & Attachment",
+                text: "Client will identify entrenched pursue-withdraw conflict cycles and express underlying primary attachment vulnerabilities directly.",
+                objectiveIds: ["o_rel_1", "o_rel_2", "o_slf_5", "o_slf_7"]
+            },
+            "g_rel_2": {
+                id: "g_rel_2",
+                domainTag: "Intimate Relationships & Attachment",
+                text: "Client will repair emotional disconnection in intimate partnership by fostering mutual empathy and vulnerable emotional sharing.",
+                objectiveIds: ["o_rel_2", "o_rel_1", "o_rel_5", "o_dev_1"]
+            },
+            "g_rel_3": {
+                id: "g_rel_3",
+                domainTag: "Intimate Relationships & Attachment",
+                text: "Client will process attachment injury and trauma following relational betrayal to rebuild internal stability and discerning trust.",
+                objectiveIds: ["o_rel_3", "o_trm_1", "o_dev_5", "o_grf_1"]
+            },
+            "g_rel_4": {
+                id: "g_rel_4",
+                domainTag: "Intimate Relationships & Attachment",
+                text: "Client will reduce anxious abandonment reactivity and engulfment defenses to support balanced relational intimacy.",
+                objectiveIds: ["o_rel_4", "o_rel_5", "o_dev_5", "o_rel_1"]
+            },
+            "g_rel_5": {
+                id: "g_rel_5",
+                domainTag: "Intimate Relationships & Attachment",
+                text: "Client will transform codependent self-abandonment into interdependent connection anchored in clear personal boundaries.",
+                objectiveIds: ["o_rel_6", "o_slf_6", "o_dev_4", "o_fam_3"]
+            },
+
+            // --- PARENTING & INTERGENERATIONAL CAREGIVING ---
+            "g_par_1": {
+                id: "g_par_1",
+                domainTag: "Parenting & Caregiving",
+                text: "Client will alleviate parental burnout and chronic caregiving depletion by establishing sustainable emotional boundaries and self-renewal.",
+                objectiveIds: ["o_par_1", "o_par_2", "o_slf_6", "o_dep_3"]
+            },
+            "g_par_2": {
+                id: "g_par_2",
+                domainTag: "Parenting & Caregiving",
+                text: "Client will soften punitive parental guilt and cultivate self-compassionate, attuned responsiveness in caregiving.",
+                objectiveIds: ["o_par_2", "o_par_1", "o_slf_1", "o_ocd_5"]
+            },
+            "g_par_3": {
+                id: "g_par_3",
+                domainTag: "Parenting & Caregiving",
+                text: "Client will recognize and process triggered childhood attachment wounds during parenting moments to interrupt intergenerational reactivity.",
+                objectiveIds: ["o_par_3", "o_dev_1", "o_par_2", "o_anx_2"]
+            },
+            "g_par_4": {
+                id: "g_par_4",
+                domainTag: "Parenting & Caregiving",
+                text: "Client will navigate co-parenting tensions and developmental family transitions with grounded emotional regulation and role clarity.",
+                objectiveIds: ["o_par_4", "o_grf_5", "o_slf_6", "o_rel_1"]
+            },
+
+            // --- WORK, VOCATION & AUTHORITY DYNAMICS ---
+            "g_wrk_1": {
+                id: "g_wrk_1",
+                domainTag: "Work, Vocation & Authority",
+                text: "Client will recover from occupational burnout by restoring boundaries between vocational role demands and core personal identity.",
+                objectiveIds: ["o_wrk_1", "o_slf_6", "o_dep_3", "o_wrk_4"]
+            },
+            "g_wrk_2": {
+                id: "g_wrk_2",
+                domainTag: "Work, Vocation & Authority",
+                text: "Client will resolve imposter feelings and chronic performance anxiety by internalizing authentic competence and self-worth.",
+                objectiveIds: ["o_wrk_2", "o_slf_1", "o_dev_3", "o_exe_4"]
+            },
+            "g_wrk_3": {
+                id: "g_wrk_3",
+                domainTag: "Work, Vocation & Authority",
+                text: "Client will process transference reactions toward workplace authority figures to foster grounded agency and assertive communication.",
+                objectiveIds: ["o_wrk_3", "o_slf_6", "o_dev_2", "o_slf_7"]
+            },
+            "g_wrk_4": {
+                id: "g_wrk_4",
+                domainTag: "Work, Vocation & Authority",
+                text: "Client will clarify authentic vocational values and existential direction amid career uncertainty or toxic workplace stress.",
+                objectiveIds: ["o_wrk_4", "o_slf_3", "o_exe_3", "o_wrk_1"]
+            },
+
+            // --- SELF-WORTH, EXISTENTIAL IDENTITY & DEFENSE OPERATIONS ---
+            "g_slf_1": {
+                id: "g_slf_1",
+                domainTag: "Self-Worth & Existential Identity",
+                text: "Client will soften punitive superego self-criticism and cultivate a compassionate, congruent internal locus of evaluation.",
+                objectiveIds: ["o_slf_1", "o_dev_3", "o_slf_2", "o_wrk_2"]
+            },
+            "g_slf_2": {
+                id: "g_slf_2",
+                domainTag: "Self-Worth & Existential Identity",
+                text: "Client will clarify authentic personal identity and existential meaning independent of external validation or people-pleasing.",
+                objectiveIds: ["o_slf_2", "o_slf_3", "o_dep_7", "o_slf_6"]
+            },
+            "g_slf_3": {
+                id: "g_slf_3",
+                domainTag: "Defenses & Affective Expression",
+                text: "Client will increase awareness of defensive intellectualization and emotional shutdown to allow fuller affective experiencing.",
+                objectiveIds: ["o_slf_4", "o_slf_5", "o_dep_2", "o_rel_1"]
+            },
+            "g_slf_4": {
+                id: "g_slf_4",
+                domainTag: "Defenses & Affective Expression",
+                text: "Client will integrate suppressed or explosive anger as a constructive signal of personal boundaries and unmet needs.",
+                objectiveIds: ["o_slf_7", "o_slf_6", "o_dep_4", "o_rel_1"]
+            }
+        };
+
+        // =========================================================================
+        // 3. PRESENTING CONCERNS CATALOGUE (77 DISTINCT SINGLE-IDEA CARDS)
+        //    - Strictly ONE single idea per card.
+        //    - ZERO ampersands (&) in any title or subtitle.
+        //    - Each maps to 4–5 clinical Goal IDs.
+        // =========================================================================
+        const DOMAIN_FILTERS = [
+            "All",
+            "Anxiety",
+            "Depression",
+            "Obsessions & Compulsions",
+            "Traumatic Events",
+            "Developmental Trauma",
+            "Executive Functioning",
+            "Grief",
+            "Family",
+            "Relationships",
+            "Parenting",
+            "Work",
+            "Self-Worth & Identity",
+            "Defenses & Anger"
+        ];
+
+        const PRESENTING_CONCERNS = [
+            // --- ANXIETY (8 Cards) ---
+            {
+                id: "pc_anx_1",
+                title: "Constant Overthinking",
+                subtitle: "Obsessive Cognitive Rumination",
+                domain: "Anxiety",
+                goalIds: ["g_anx_2", "g_anx_1", "g_anx_4", "g_slf_3"]
+            },
+            {
+                id: "pc_anx_2",
+                title: "Panic Attacks",
+                subtitle: "Acute Autonomic Surges",
+                domain: "Anxiety",
+                goalIds: ["g_anx_3", "g_anx_1", "g_trm_2", "g_anx_2"]
+            },
+            {
+                id: "pc_anx_3",
+                title: "Social Anxiety",
+                subtitle: "Interpersonal Evaluation Distress",
+                domain: "Anxiety",
+                goalIds: ["g_anx_5", "g_slf_2", "g_slf_1", "g_anx_1"]
+            },
+            {
+                id: "pc_anx_4",
+                title: "Fear of Uncertainty",
+                subtitle: "Ambiguity Intolerance",
+                domain: "Anxiety",
+                goalIds: ["g_anx_4", "g_anx_2", "g_ocd_3", "g_exe_3"]
+            },
+            {
+                id: "pc_anx_5",
+                title: "Health Worries",
+                subtitle: "Somatic Hyper-Monitoring",
+                domain: "Anxiety",
+                goalIds: ["g_anx_3", "g_anx_1", "g_anx_2", "g_ocd_1"]
+            },
+            {
+                id: "pc_anx_6",
+                title: "Chronic Muscle Tension",
+                subtitle: "Somatic Armoring",
+                domain: "Anxiety",
+                goalIds: ["g_anx_1", "g_trm_2", "g_anx_3", "g_slf_4"]
+            },
+            {
+                id: "pc_anx_7",
+                title: "Feeling Constantly on Edge",
+                subtitle: "Baseline Hyperarousal",
+                domain: "Anxiety",
+                goalIds: ["g_anx_1", "g_trm_2", "g_dev_2", "g_anx_3"]
+            },
+            {
+                id: "pc_anx_8",
+                title: "Fear of Being Judged",
+                subtitle: "External Scrutiny Sensitivity",
+                domain: "Anxiety",
+                goalIds: ["g_anx_5", "g_slf_1", "g_slf_2", "g_dev_3"]
+            },
+
+            // --- DEPRESSION (7 Cards) ---
+            {
+                id: "pc_dep_1",
+                title: "Persistent Sadness",
+                subtitle: "Chronic Depressive Affect",
+                domain: "Depression",
+                goalIds: ["g_dep_1", "g_dep_3", "g_grf_1", "g_dep_5"]
+            },
+            {
+                id: "pc_dep_2",
+                title: "Emotional Numbness",
+                subtitle: "Affective Constriction",
+                domain: "Depression",
+                goalIds: ["g_dep_2", "g_dep_1", "g_dev_5", "g_slf_3"]
+            },
+            {
+                id: "pc_dep_3",
+                title: "Loss of Motivation",
+                subtitle: "Diminished Vital Drive",
+                domain: "Depression",
+                goalIds: ["g_dep_2", "g_exe_1", "g_dep_1", "g_wrk_1"]
+            },
+            {
+                id: "pc_dep_4",
+                title: "Feeling Empty Inside",
+                subtitle: "Internal Void Experience",
+                domain: "Depression",
+                goalIds: ["g_dep_4", "g_dev_1", "g_dep_2", "g_slf_2"]
+            },
+            {
+                id: "pc_dep_5",
+                title: "Chronic Exhaustion",
+                subtitle: "Psychic Depletion",
+                domain: "Depression",
+                goalIds: ["g_dep_3", "g_wrk_1", "g_par_1", "g_dep_1"]
+            },
+            {
+                id: "pc_dep_6",
+                title: "Sense of Hopelessness",
+                subtitle: "Foreshortened Future Outlook",
+                domain: "Depression",
+                goalIds: ["g_dep_5", "g_dep_1", "g_grf_3", "g_slf_2"]
+            },
+            {
+                id: "pc_dep_7",
+                title: "Social Withdrawal",
+                subtitle: "Relational Isolation",
+                domain: "Depression",
+                goalIds: ["g_dep_5", "g_dep_4", "g_dev_4", "g_anx_5"]
+            },
+
+            // --- OBSESSIONS & COMPULSIONS (6 Cards) ---
+            {
+                id: "pc_ocd_1",
+                title: "Intrusive Unwanted Thoughts",
+                subtitle: "Ego-Dystonic Obsessions",
+                domain: "Obsessions & Compulsions",
+                goalIds: ["g_ocd_2", "g_ocd_1", "g_ocd_4", "g_anx_2"]
+            },
+            {
+                id: "pc_ocd_2",
+                title: "Compulsive Checking Behaviors",
+                subtitle: "Anxiety-Neutralizing Rituals",
+                domain: "Obsessions & Compulsions",
+                goalIds: ["g_ocd_1", "g_ocd_2", "g_anx_4", "g_ocd_3"]
+            },
+            {
+                id: "pc_ocd_3",
+                title: "Need for Symmetry",
+                subtitle: "Control Through Order",
+                domain: "Obsessions & Compulsions",
+                goalIds: ["g_ocd_1", "g_ocd_3", "g_anx_4", "g_ocd_4"]
+            },
+            {
+                id: "pc_ocd_4",
+                title: "Fear of Contamination",
+                subtitle: "Somatic Purity Preoccupation",
+                domain: "Obsessions & Compulsions",
+                goalIds: ["g_ocd_1", "g_ocd_2", "g_anx_3", "g_ocd_4"]
+            },
+            {
+                id: "pc_ocd_5",
+                title: "Mental Rituals",
+                subtitle: "Covert Cognitive Neutralizing",
+                domain: "Obsessions & Compulsions",
+                goalIds: ["g_ocd_2", "g_ocd_4", "g_ocd_1", "g_anx_2"]
+            },
+            {
+                id: "pc_ocd_6",
+                title: "Perfectionistic Control",
+                subtitle: "Compulsive Standard Setting",
+                domain: "Obsessions & Compulsions",
+                goalIds: ["g_ocd_3", "g_slf_1", "g_anx_4", "g_exe_4"]
+            },
+
+            // --- TRAUMATIC EVENTS (5 Cards) ---
+            {
+                id: "pc_trm_1",
+                title: "Intrusive Trauma Memories",
+                subtitle: "Unintegrated Event Recall",
+                domain: "Traumatic Events",
+                goalIds: ["g_trm_1", "g_trm_2", "g_trm_4", "g_trm_3"]
+            },
+            {
+                id: "pc_trm_2",
+                title: "Trauma Nightmares",
+                subtitle: "Nocturnal Threat Re-Experiencing",
+                domain: "Traumatic Events",
+                goalIds: ["g_trm_1", "g_trm_2", "g_anx_1", "g_trm_4"]
+            },
+            {
+                id: "pc_trm_3",
+                title: "Hypervigilance After a Crisis",
+                subtitle: "Persistent Threat Scanning",
+                domain: "Traumatic Events",
+                goalIds: ["g_trm_2", "g_anx_1", "g_trm_1", "g_anx_3"]
+            },
+            {
+                id: "pc_trm_4",
+                title: "Avoidance of Trauma Reminders",
+                subtitle: "Phobic Trigger Evasion",
+                domain: "Traumatic Events",
+                goalIds: ["g_trm_4", "g_trm_1", "g_trm_2", "g_grf_1"]
+            },
+            {
+                id: "pc_trm_5",
+                title: "Feeling Detached After a Shock",
+                subtitle: "Peritraumatic Dissociation",
+                domain: "Traumatic Events",
+                goalIds: ["g_trm_3", "g_trm_1", "g_dev_5", "g_dep_2"]
+            },
+
+            // --- DEVELOPMENTAL TRAUMA (7 Cards) ---
+            {
+                id: "pc_dev_1",
+                title: "Childhood Emotional Neglect",
+                subtitle: "Early Attunement Deprivation",
+                domain: "Developmental Trauma",
+                goalIds: ["g_dev_1", "g_dep_4", "g_dev_3", "g_slf_2"]
+            },
+            {
+                id: "pc_dev_2",
+                title: "Walking on Eggshells",
+                subtitle: "Hyper-Adaptive Relational Vigilance",
+                domain: "Developmental Trauma",
+                goalIds: ["g_dev_2", "g_anx_1", "g_rel_4", "g_fam_1"]
+            },
+            {
+                id: "pc_dev_3",
+                title: "Feeling Unlovable at Core",
+                subtitle: "Defectiveness Self-Schema",
+                domain: "Developmental Trauma",
+                goalIds: ["g_dev_3", "g_dev_1", "g_slf_1", "g_rel_4"]
+            },
+            {
+                id: "pc_dev_4",
+                title: "Chronic Shame from Upbringing",
+                subtitle: "Internalized Relational Shame",
+                domain: "Developmental Trauma",
+                goalIds: ["g_dev_3", "g_slf_1", "g_dev_1", "g_anx_5"]
+            },
+            {
+                id: "pc_dev_5",
+                title: "Difficulty Trusting Others",
+                subtitle: "Relational Guardedness",
+                domain: "Developmental Trauma",
+                goalIds: ["g_dev_4", "g_rel_3", "g_rel_4", "g_dev_2"]
+            },
+            {
+                id: "pc_dev_6",
+                title: "Over-Accommodating Others",
+                subtitle: "Fawning Survival Adaptation",
+                domain: "Developmental Trauma",
+                goalIds: ["g_dev_2", "g_slf_2", "g_rel_5", "g_fam_3"]
+            },
+            {
+                id: "pc_dev_7",
+                title: "Emotional Dissociation",
+                subtitle: "Protective Compartmentalization",
+                domain: "Developmental Trauma",
+                goalIds: ["g_dev_5", "g_trm_3", "g_dep_2", "g_slf_3"]
+            },
+
+            // --- EXECUTIVE FUNCTIONING (6 Cards) ---
+            {
+                id: "pc_exe_1",
+                title: "Chronic Procrastination",
+                subtitle: "Affect-Driven Task Avoidance",
+                domain: "Executive Functioning",
+                goalIds: ["g_exe_1", "g_exe_4", "g_ocd_3", "g_dep_2"]
+            },
+            {
+                id: "pc_exe_2",
+                title: "Task Initiation Paralysis",
+                subtitle: "Activation Freeze Response",
+                domain: "Executive Functioning",
+                goalIds: ["g_exe_1", "g_exe_2", "g_exe_4", "g_anx_1"]
+            },
+            {
+                id: "pc_exe_3",
+                title: "Time Overwhelm",
+                subtitle: "Temporal Regulation Strain",
+                domain: "Executive Functioning",
+                goalIds: ["g_exe_2", "g_exe_1", "g_wrk_1", "g_anx_1"]
+            },
+            {
+                id: "pc_exe_4",
+                title: "Difficulty Organizing Priorities",
+                subtitle: "Cognitive Sequencing Overload",
+                domain: "Executive Functioning",
+                goalIds: ["g_exe_2", "g_exe_3", "g_exe_1", "g_wrk_4"]
+            },
+            {
+                id: "pc_exe_5",
+                title: "Mental Clutter",
+                subtitle: "Attentional Fragmentation",
+                domain: "Executive Functioning",
+                goalIds: ["g_exe_2", "g_anx_2", "g_exe_4", "g_dep_2"]
+            },
+            {
+                id: "pc_exe_6",
+                title: "Decision Fatigue",
+                subtitle: "Choice Paralysis",
+                domain: "Executive Functioning",
+                goalIds: ["g_exe_3", "g_anx_4", "g_slf_2", "g_exe_2"]
+            },
+
+            // --- GRIEF (5 Cards) ---
+            {
+                id: "pc_grf_1",
+                title: "Mourning a Loved One",
+                subtitle: "Acute Bereavement Process",
+                domain: "Grief",
+                goalIds: ["g_grf_1", "g_grf_2", "g_dep_1", "g_trm_4"]
+            },
+            {
+                id: "pc_grf_2",
+                title: "Grief After a Breakup",
+                subtitle: "Relational Attachment Loss",
+                domain: "Grief",
+                goalIds: ["g_grf_1", "g_grf_2", "g_rel_4", "g_dep_1"]
+            },
+            {
+                id: "pc_grf_3",
+                title: "Stuck Grief",
+                subtitle: "Complicated Mourning",
+                domain: "Grief",
+                goalIds: ["g_grf_2", "g_grf_1", "g_dep_3", "g_trm_4"]
+            },
+            {
+                id: "pc_grf_4",
+                title: "Grieving Missed Life Stages",
+                subtitle: "Disenfranchised Developmental Loss",
+                domain: "Grief",
+                goalIds: ["g_grf_3", "g_dev_1", "g_dep_5", "g_slf_2"]
+            },
+            {
+                id: "pc_grf_5",
+                title: "Anticipatory Grief",
+                subtitle: "Pre-Loss Mourning",
+                domain: "Grief",
+                goalIds: ["g_grf_4", "g_grf_1", "g_fam_4", "g_anx_4"]
+            },
+
+            // --- FAMILY (5 Cards) ---
+            {
+                id: "pc_fam_1",
+                title: "Enmeshment with Family",
+                subtitle: "Diffuse Family Boundaries",
+                domain: "Family",
+                goalIds: ["g_fam_1", "g_fam_3", "g_slf_2", "g_rel_5"]
+            },
+            {
+                id: "pc_fam_2",
+                title: "Estrangement from Family",
+                subtitle: "Relational Cut-Off",
+                domain: "Family",
+                goalIds: ["g_fam_2", "g_grf_2", "g_fam_1", "g_dev_1"]
+            },
+            {
+                id: "pc_fam_3",
+                title: "Family Caretaking Role",
+                subtitle: "Parentified Self-Sacrifice",
+                domain: "Family",
+                goalIds: ["g_fam_3", "g_fam_1", "g_rel_5", "g_dev_2"]
+            },
+            {
+                id: "pc_fam_4",
+                title: "Unresolved Sibling Rivalry",
+                subtitle: "Early Comparative Wounds",
+                domain: "Family",
+                goalIds: ["g_fam_4", "g_fam_1", "g_dev_3", "g_slf_1"]
+            },
+            {
+                id: "pc_fam_5",
+                title: "Navigating Aging Parents",
+                subtitle: "Intergenerational Role Reversal",
+                domain: "Family",
+                goalIds: ["g_fam_4", "g_grf_4", "g_fam_3", "g_par_1"]
+            },
+
+            // --- RELATIONSHIPS (6 Cards) ---
+            {
+                id: "pc_rel_1",
+                title: "Recurring Couple Conflict",
+                subtitle: "Entrenched Relational Cycles",
+                domain: "Relationships",
+                goalIds: ["g_rel_1", "g_rel_2", "g_slf_3", "g_slf_4"]
+            },
+            {
+                id: "pc_rel_2",
+                title: "Emotional Distance in Marriage",
+                subtitle: "Attachment Disconnection",
+                domain: "Relationships",
+                goalIds: ["g_rel_2", "g_rel_1", "g_dep_4", "g_rel_4"]
+            },
+            {
+                id: "pc_rel_3",
+                title: "Betrayal Recovery",
+                subtitle: "Attachment Rupture Repair",
+                domain: "Relationships",
+                goalIds: ["g_rel_3", "g_dev_4", "g_trm_1", "g_grf_1"]
+            },
+            {
+                id: "pc_rel_4",
+                title: "Fear of Abandonment",
+                subtitle: "Anxious Attachment Activation",
+                domain: "Relationships",
+                goalIds: ["g_rel_4", "g_dev_4", "g_rel_1", "g_dev_3"]
+            },
+            {
+                id: "pc_rel_5",
+                title: "Fear of Intimacy",
+                subtitle: "Vulnerability Avoidance",
+                domain: "Relationships",
+                goalIds: ["g_rel_4", "g_dev_4", "g_rel_2", "g_slf_3"]
+            },
+            {
+                id: "pc_rel_6",
+                title: "Codependent Patterns",
+                subtitle: "Self-Loss in Relationships",
+                domain: "Relationships",
+                goalIds: ["g_rel_5", "g_fam_3", "g_dev_2", "g_slf_2"]
+            },
+
+            // --- PARENTING (6 Cards) ---
+            {
+                id: "pc_par_1",
+                title: "Parental Burnout",
+                subtitle: "Caregiving Depletion",
+                domain: "Parenting",
+                goalIds: ["g_par_1", "g_par_2", "g_dep_3", "g_wrk_1"]
+            },
+            {
+                id: "pc_par_2",
+                title: "Guilt About Parenting",
+                subtitle: "Caregiver Self-Reproach",
+                domain: "Parenting",
+                goalIds: ["g_par_2", "g_par_1", "g_slf_1", "g_ocd_3"]
+            },
+            {
+                id: "pc_par_3",
+                title: "Triggered Childhood Wounds",
+                subtitle: "Intergenerational Trauma Activation",
+                domain: "Parenting",
+                goalIds: ["g_par_3", "g_dev_1", "g_par_2", "g_slf_4"]
+            },
+            {
+                id: "pc_par_4",
+                title: "Co-Parenting Conflict",
+                subtitle: "Parental Alliance Strain",
+                domain: "Parenting",
+                goalIds: ["g_par_4", "g_rel_1", "g_par_1", "g_slf_4"]
+            },
+            {
+                id: "pc_par_5",
+                title: "Navigating a Child's Struggles",
+                subtitle: "Parental Helplessness Distress",
+                domain: "Parenting",
+                goalIds: ["g_par_4", "g_par_2", "g_anx_4", "g_par_1"]
+            },
+            {
+                id: "pc_par_6",
+                title: "Empty Nest Transition",
+                subtitle: "Identity Shift in Midlife",
+                domain: "Parenting",
+                goalIds: ["g_par_4", "g_grf_3", "g_slf_2", "g_dep_4"]
+            },
+
+            // --- WORK (6 Cards) ---
+            {
+                id: "pc_wrk_1",
+                title: "Workplace Burnout",
+                subtitle: "Occupational Exhaustion",
+                domain: "Work",
+                goalIds: ["g_wrk_1", "g_dep_3", "g_wrk_4", "g_exe_2"]
+            },
+            {
+                id: "pc_wrk_2",
+                title: "Imposter Syndrome at Work",
+                subtitle: "Achievement Internalization Deficit",
+                domain: "Work",
+                goalIds: ["g_wrk_2", "g_slf_1", "g_dev_3", "g_exe_4"]
+            },
+            {
+                id: "pc_wrk_3",
+                title: "Toxic Work Environment",
+                subtitle: "Chronic Workplace Threat",
+                domain: "Work",
+                goalIds: ["g_wrk_4", "g_wrk_1", "g_wrk_3", "g_anx_1"]
+            },
+            {
+                id: "pc_wrk_4",
+                title: "Career Direction Uncertainty",
+                subtitle: "Vocational Identity Diffusion",
+                domain: "Work",
+                goalIds: ["g_wrk_4", "g_slf_2", "g_exe_3", "g_dep_5"]
+            },
+            {
+                id: "pc_wrk_5",
+                title: "Work-Life Boundary Collapse",
+                subtitle: "Role Over-Identification",
+                domain: "Work",
+                goalIds: ["g_wrk_1", "g_rel_5", "g_ocd_3", "g_par_1"]
+            },
+            {
+                id: "pc_wrk_6",
+                title: "Conflict with Authority",
+                subtitle: "Transference Toward Supervisors",
+                domain: "Work",
+                goalIds: ["g_wrk_3", "g_dev_2", "g_slf_4", "g_wrk_2"]
+            },
+
+            // --- SELF-WORTH & IDENTITY (5 Cards) ---
+            {
+                id: "pc_slf_1",
+                title: "Harsh Inner Critic",
+                subtitle: "Punitive Superego Operations",
+                domain: "Self-Worth & Identity",
+                goalIds: ["g_slf_1", "g_dev_3", "g_ocd_3", "g_wrk_2"]
+            },
+            {
+                id: "pc_slf_2",
+                title: "People Pleasing",
+                subtitle: "External Locus of Evaluation",
+                domain: "Self-Worth & Identity",
+                goalIds: ["g_slf_2", "g_dev_2", "g_rel_5", "g_fam_1"]
+            },
+            {
+                id: "pc_slf_3",
+                title: "Identity Confusion",
+                subtitle: "Diffuse Sense of Self",
+                domain: "Self-Worth & Identity",
+                goalIds: ["g_slf_2", "g_dep_4", "g_fam_1", "g_wrk_4"]
+            },
+            {
+                id: "pc_slf_4",
+                title: "Lack of Life Purpose",
+                subtitle: "Existential Meaning Vacuum",
+                domain: "Self-Worth & Identity",
+                goalIds: ["g_slf_2", "g_dep_5", "g_wrk_4", "g_grf_3"]
+            },
+            {
+                id: "pc_slf_5",
+                title: "Feeling Like a Fraud",
+                subtitle: "Inauthentic Self-Presentation",
+                domain: "Self-Worth & Identity",
+                goalIds: ["g_wrk_2", "g_slf_1", "g_slf_2", "g_dev_3"]
+            },
+
+            // --- DEFENSES & ANGER (5 Cards) ---
+            {
+                id: "pc_def_1",
+                title: "Intellectualizing Feelings",
+                subtitle: "Cognitive Detachment Defense",
+                domain: "Defenses & Anger",
+                goalIds: ["g_slf_3", "g_dep_2", "g_rel_2", "g_anx_2"]
+            },
+            {
+                id: "pc_def_2",
+                title: "Shutting Down in Conflict",
+                subtitle: "Freeze-Withdrawal Defense",
+                domain: "Defenses & Anger",
+                goalIds: ["g_slf_3", "g_rel_1", "g_dev_5", "g_dev_2"]
+            },
+            {
+                id: "pc_def_3",
+                title: "Difficulty Saying No",
+                subtitle: "Assertiveness Inhibition",
+                domain: "Defenses & Anger",
+                goalIds: ["g_rel_5", "g_slf_2", "g_fam_3", "g_dev_2"]
+            },
+            {
+                id: "pc_def_4",
+                title: "Explosive Anger",
+                subtitle: "Affective Flood Discharge",
+                domain: "Defenses & Anger",
+                goalIds: ["g_slf_4", "g_rel_1", "g_trm_2", "g_par_3"]
+            },
+            {
+                id: "pc_def_5",
+                title: "Suppressed Anger",
+                subtitle: "Retroflected Aggression",
+                domain: "Defenses & Anger",
+                goalIds: ["g_slf_4", "g_dep_3", "g_rel_5", "g_anx_1"]
+            }
+        ];
+
+        // =========================================================================
+        // 4. APPLICATION STATE
+        // =========================================================================
+        const state = {
+            currentStep: 1,
+            activeDomain: "All",
+            auditMetricsOn: true,
+            selectedConcernIds: [],
+            selectedGoalIds: [],
+            selectedObjectivesByGoal: {}, // { [goalId]: [objId1, objId2] }
+            // Inline edit overrides on Step 4 (Export)
+            customGoalTexts: {},         // { [goalId]: string }
+            customObjectiveTexts: {},    // { [goalId_objId]: string }
+            customInterventionTexts: {}  // { [goalId_objId]: string }
+        };
+
+        // =========================================================================
+        // 5. INITIALIZATION & STATE HELPERS
+        // =========================================================================
+        document.addEventListener("DOMContentLoaded", () => {
+            renderDomainPills();
+            renderStep1();
+            updateAllBadgesAndStickyBar();
+        });
+
+        function handleAuditToggleChange() {
+            const toggle = document.getElementById("auditToggle");
+            state.auditMetricsOn = toggle.checked;
+            const statusBadge = document.getElementById("auditToggleStatus");
+
+            if (state.auditMetricsOn) {
+                statusBadge.textContent = "ON";
+                statusBadge.className = "text-[11px] font-bold px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 w-10 text-center";
+            } else {
+                statusBadge.textContent = "OFF";
+                statusBadge.className = "text-[11px] font-bold px-2 py-0.5 rounded bg-slate-700 text-slate-300 border border-slate-600 w-10 text-center";
+            }
+
+            if (state.currentStep === 3) {
+                renderStep3();
+            } else if (state.currentStep === 4) {
+                renderStep4();
+            }
+        }
+
+        function resetPlan() {
+            state.currentStep = 1;
+            state.activeDomain = "All";
+            state.selectedConcernIds = [];
+            state.selectedGoalIds = [];
+            state.selectedObjectivesByGoal = {};
+            state.customGoalTexts = {};
+            state.customObjectiveTexts = {};
+            state.customInterventionTexts = {};
+
+            const searchInput = document.getElementById("concernSearchInput");
+            if (searchInput) searchInput.value = "";
+            document.getElementById("clearSearchBtn").classList.add("hidden");
+
+            renderDomainPills();
+            goToStep(1);
+            showToast("Treatment plan reset. Ready for a new client.");
+        }
+
+        function getFormattedObjectiveText(obj) {
+            if (state.auditMetricsOn) {
+                return `${obj.baseText}${obj.metricClause}.`;
+            }
+            return `${obj.baseText}.`;
+        }
+
+        function getGoalTextForExport(goal) {
+            return state.customGoalTexts[goal.id] !== undefined
+                ? state.customGoalTexts[goal.id]
+                : goal.text;
+        }
+
+        function getObjectiveTextForExport(goalId, obj) {
+            const key = `${goalId}__${obj.id}`;
+            return state.customObjectiveTexts[key] !== undefined
+                ? state.customObjectiveTexts[key]
+                : getFormattedObjectiveText(obj);
+        }
+
+        function getInterventionsTextForExport(goalId, obj) {
+            const key = `${goalId}__${obj.id}`;
+            return state.customInterventionTexts[key] !== undefined
+                ? state.customInterventionTexts[key]
+                : obj.interventions.join("\n");
+        }
+
+        // =========================================================================
+        // 6. WIZARD NAVIGATION
+        // =========================================================================
+        function goToStep(stepNum) {
+            state.currentStep = stepNum;
+
+            // Toggle section visibility
+            for (let i = 1; i <= 4; i++) {
+                const section = document.getElementById(`step${i}Section`);
+                if (section) {
+                    section.classList.toggle("hidden", i !== stepNum);
+                }
+            }
+
+            // Update top wizard nav button styles
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`navStep${i}`);
+                const numSpan = btn.querySelector("span:first-child");
+                if (i === stepNum) {
+                    btn.className = "flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap bg-teal-50 text-teal-800 ring-1 ring-teal-600/30";
+                    numSpan.className = "w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[10px] font-bold";
+                } else {
+                    btn.className = "flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-medium transition whitespace-nowrap text-slate-600 hover:bg-slate-100";
+                    numSpan.className = "w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px] font-bold";
+                }
+            }
+
+            // Render active step
+            if (stepNum === 1) renderStep1();
+            if (stepNum === 2) renderStep2();
+            if (stepNum === 3) renderStep3();
+            if (stepNum === 4) renderStep4();
+
+            updateAllBadgesAndStickyBar();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function advanceWizardStep() {
+            if (state.currentStep < 4) {
+                goToStep(state.currentStep + 1);
+            }
+        }
+
+        function clearCurrentStepSelections() {
+            if (state.currentStep === 1) {
+                state.selectedConcernIds = [];
+                renderStep1();
+                showToast("Cleared selected presenting concerns.");
+            } else if (state.currentStep === 2) {
+                state.selectedGoalIds = [];
+                state.selectedObjectivesByGoal = {};
+                renderStep2();
+                showToast("Cleared selected goals.");
+            } else if (state.currentStep === 3) {
+                state.selectedObjectivesByGoal = {};
+                renderStep3();
+                showToast("Cleared selected objectives.");
+            }
+            updateAllBadgesAndStickyBar();
+        }
+
+        function updateAllBadgesAndStickyBar() {
+            // Nav Badges
+            const b1 = document.getElementById("badgeStep1");
+            const b2 = document.getElementById("badgeStep2");
+            const b3 = document.getElementById("badgeStep3");
+
+            b1.textContent = state.selectedConcernIds.length;
+            b1.classList.toggle("hidden", state.selectedConcernIds.length === 0);
+
+            b2.textContent = state.selectedGoalIds.length;
+            b2.classList.toggle("hidden", state.selectedGoalIds.length === 0);
+
+            const totalObjs = Object.values(state.selectedObjectivesByGoal).reduce((sum, arr) => sum + arr.length, 0);
+            b3.textContent = totalObjs;
+            b3.classList.toggle("hidden", totalObjs === 0);
+
+            // Sticky Bottom Bar (visible on Steps 1–3 when items are selected)
+            const stickyBar = document.getElementById("stickySummaryBar");
+            const stickyText = document.getElementById("stickySummaryText");
+            const stickyNextLabel = document.getElementById("stickyNextLabel");
+
+            if (state.currentStep === 1 && state.selectedConcernIds.length > 0) {
+                stickyText.textContent = `${state.selectedConcernIds.length} Presenting Concern${state.selectedConcernIds.length === 1 ? "" : "s"} Selected`;
+                stickyNextLabel.textContent = "Continue to Select Goals";
+                stickyBar.classList.remove("translate-y-full");
+            } else if (state.currentStep === 2 && state.selectedGoalIds.length > 0) {
+                stickyText.textContent = `${state.selectedGoalIds.length} Clinical Goal${state.selectedGoalIds.length === 1 ? "" : "s"} Selected (Target: 3–4)`;
+                stickyNextLabel.textContent = "Continue to Select Objectives";
+                stickyBar.classList.remove("translate-y-full");
+            } else if (state.currentStep === 3 && totalObjs > 0) {
+                stickyText.textContent = `${totalObjs} Process Objective${totalObjs === 1 ? "" : "s"} Selected across ${state.selectedGoalIds.length} Goal${state.selectedGoalIds.length === 1 ? "" : "s"}`;
+                stickyNextLabel.textContent = "Continue to Export";
+                stickyBar.classList.remove("translate-y-full");
+            } else {
+                stickyBar.classList.add("translate-y-full");
+            }
+        }
+
+        // =========================================================================
+        // 7. STEP 1 RENDERING & FILTERING
+        // =========================================================================
+        function renderDomainPills() {
+            const container = document.getElementById("domainFilterPills");
+            container.innerHTML = "";
+
+            DOMAIN_FILTERS.forEach(domain => {
+                const count = domain === "All"
+                    ? PRESENTING_CONCERNS.length
+                    : PRESENTING_CONCERNS.filter(c => c.domain === domain).length;
+
+                const isActive = state.activeDomain === domain;
+                const pill = document.createElement("button");
+                pill.type = "button";
+                pill.onclick = () => {
+                    state.activeDomain = domain;
+                    renderDomainPills();
+                    renderStep1();
+                };
+
+                pill.className = isActive
+                    ? "px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-600 text-white shadow-sm transition flex items-center gap-1.5"
+                    : "px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200/80 transition flex items-center gap-1.5";
+
+                pill.innerHTML = `
+                    <span>${domain}</span>
+                    <span class="text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? "bg-teal-700 text-teal-100" : "bg-white text-slate-500"}">${count}</span>
+                `;
+                container.appendChild(pill);
+            });
+        }
+
+        function clearSearch() {
+            const input = document.getElementById("concernSearchInput");
+            input.value = "";
+            document.getElementById("clearSearchBtn").classList.add("hidden");
+            renderStep1();
+        }
+
+        function resetStep1Filters() {
+            state.activeDomain = "All";
+            clearSearch();
+            renderDomainPills();
+            renderStep1();
+        }
+
+        function renderStep1() {
+            const grid = document.getElementById("concernsGrid");
+            const emptyState = document.getElementById("concernsEmptyState");
+            const searchInput = document.getElementById("concernSearchInput");
+            const clearBtn = document.getElementById("clearSearchBtn");
+            const visibleLabel = document.getElementById("visibleCountLabel");
+
+            const query = searchInput.value.trim().toLowerCase();
+            clearBtn.classList.toggle("hidden", query.length === 0);
+
+            const filtered = PRESENTING_CONCERNS.filter(item => {
+                const matchesDomain = state.activeDomain === "All" || item.domain === state.activeDomain;
+                const matchesQuery = !query ||
+                    item.title.toLowerCase().includes(query) ||
+                    item.subtitle.toLowerCase().includes(query) ||
+                    item.domain.toLowerCase().includes(query);
+                return matchesDomain && matchesQuery;
+            });
+
+            visibleLabel.textContent = `Showing ${filtered.length} of ${PRESENTING_CONCERNS.length} concerns`;
+            grid.innerHTML = "";
+
+            if (filtered.length === 0) {
+                grid.classList.add("hidden");
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            grid.classList.remove("hidden");
+            emptyState.classList.add("hidden");
+
+            filtered.forEach(item => {
+                const isSelected = state.selectedConcernIds.includes(item.id);
+                const card = document.createElement("button");
+                card.type = "button";
+                card.onclick = () => toggleConcern(item.id);
+
+                card.className = isSelected
+                    ? "text-left p-4 rounded-xl border-2 border-teal-600 bg-teal-50/40 shadow-sm transition flex flex-col justify-between group"
+                    : "text-left p-4 rounded-xl border border-slate-200 bg-white hover:border-teal-400 hover:shadow-sm transition flex flex-col justify-between group";
+
+                card.innerHTML = `
+                    <div class="w-full">
+                        <div class="flex items-start justify-between gap-2.5">
+                            <span class="text-sm font-bold text-slate-900 group-hover:text-teal-800 leading-snug">
+                                ${item.title}
+                            </span>
+                            <span class="w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition ${
+                                isSelected
+                                    ? "bg-teal-600 text-white"
+                                    : "border border-slate-300 bg-slate-50 group-hover:border-teal-500"
+                            }">
+                                ${isSelected ? '<i class="fa-solid fa-check text-[10px]"></i>' : ""}
+                            </span>
+                        </div>
+                        <p class="text-xs font-medium text-teal-700 mt-1.5">
+                            ${item.subtitle}
+                        </p>
+                    </div>
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between w-full">
+                        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                            ${item.domain}
+                        </span>
+                        <span class="text-[10px] text-slate-400">
+                            ${item.goalIds.length} goals
+                        </span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleConcern(concernId) {
+            const idx = state.selectedConcernIds.indexOf(concernId);
+            if (idx > -1) {
+                state.selectedConcernIds.splice(idx, 1);
+            } else {
+                state.selectedConcernIds.push(concernId);
+            }
+            renderStep1();
+            updateAllBadgesAndStickyBar();
+        }
+
+        // =========================================================================
+        // 8. STEP 2 RENDERING & GOAL SELECTION (SYNCHRONIZED SHARED GOALS)
+        // =========================================================================
+        function renderStep2() {
+            const container = document.getElementById("goalsByConcernContainer");
+            const counterPill = document.getElementById("goalCounterPill");
+            const counterText = document.getElementById("goalCounterText");
+
+            const count = state.selectedGoalIds.length;
+            counterText.textContent = `Selected: ${count} Goal${count === 1 ? "" : "s"} (Target: 3–4)`;
+
+            if (count >= 3 && count <= 4) {
+                counterPill.className = "px-3.5 py-2 rounded-xl text-xs font-bold border flex items-center gap-2 shrink-0 bg-emerald-50 text-emerald-800 border-emerald-200";
+            } else if (count > 4) {
+                counterPill.className = "px-3.5 py-2 rounded-xl text-xs font-bold border flex items-center gap-2 shrink-0 bg-teal-50 text-teal-800 border-teal-200";
+            } else {
+                counterPill.className = "px-3.5 py-2 rounded-xl text-xs font-bold border flex items-center gap-2 shrink-0 bg-amber-50 text-amber-800 border-amber-200";
+            }
+
+            container.innerHTML = "";
+
+            if (state.selectedConcernIds.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white p-10 rounded-2xl border border-slate-200 text-center space-y-3">
+                        <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto">
+                            <i class="fa-solid fa-hand-pointer text-lg"></i>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-900">No Presenting Concerns Selected Yet</h3>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto">
+                            Return to Step 1 to check one or more presenting concerns so we can filter the most clinically relevant humanistic and psychodynamic goals.
+                        </p>
+                        <button onclick="goToStep(1)" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition">
+                            Go to Step 1: Presenting Concerns
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Compute frequency map of goalIds across currently selected concerns to highlight shared goals
+            const goalAppearanceCount = {};
+            state.selectedConcernIds.forEach(cId => {
+                const concern = PRESENTING_CONCERNS.find(c => c.id === cId);
+                if (concern) {
+                    concern.goalIds.forEach(gId => {
+                        goalAppearanceCount[gId] = (goalAppearanceCount[gId] || 0) + 1;
+                    });
+                }
+            });
+
+            state.selectedConcernIds.forEach(cId => {
+                const concern = PRESENTING_CONCERNS.find(c => c.id === cId);
+                if (!concern) return;
+
+                const groupCard = document.createElement("div");
+                groupCard.className = "bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden";
+
+                const goalsHtml = concern.goalIds.map(gId => {
+                    const goal = GOALS_DB[gId];
+                    if (!goal) return "";
+                    const isChecked = state.selectedGoalIds.includes(gId);
+                    const sharedCount = goalAppearanceCount[gId] || 1;
+
+                    return `
+                        <div
+                            onclick="toggleGoal('${gId}')"
+                            class="p-4 rounded-xl border cursor-pointer transition flex items-start gap-3.5 ${
+                                isChecked
+                                    ? "border-teal-600 bg-teal-50/40 ring-1 ring-teal-500/40"
+                                    : "border-slate-200 hover:border-teal-400 hover:bg-slate-50/60"
+                            }"
+                        >
+                            <div class="w-5 h-5 rounded-md mt-0.5 flex items-center justify-center shrink-0 transition ${
+                                isChecked
+                                    ? "bg-teal-600 text-white"
+                                    : "border border-slate-300 bg-white"
+                            }">
+                                ${isChecked ? '<i class="fa-solid fa-check text-[10px]"></i>' : ""}
+                            </div>
+                            <div class="flex-grow space-y-1.5">
+                                <p class="text-xs sm:text-[13px] font-semibold text-slate-800 leading-relaxed">
+                                    ${goal.text}
+                                </p>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                                        ${goal.domainTag}
+                                    </span>
+                                    <span class="text-[10px] text-slate-400">
+                                        ${goal.objectiveIds.length} process objectives available
+                                    </span>
+                                    ${sharedCount > 1 ? `
+                                        <span class="text-[10px] font-semibold text-teal-700 bg-teal-100/70 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                            <i class="fa-solid fa-link text-[9px]"></i>
+                                            Shared across ${sharedCount} selected concerns
+                                        </span>
+                                    ` : ""}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+                groupCard.innerHTML = `
+                    <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-200/80 flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-bold text-slate-900">${concern.title}</span>
+                                <span class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-500">
+                                    ${concern.domain}
+                                </span>
+                            </div>
+                            <p class="text-xs font-medium text-teal-700 mt-0.5">${concern.subtitle}</p>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-400">Select 1 or more goals below</span>
+                    </div>
+                    <div class="p-5 space-y-3">
+                        ${goalsHtml}
+                    </div>
+                `;
+                container.appendChild(groupCard);
+            });
+        }
+
+        function toggleGoal(goalId) {
+            const idx = state.selectedGoalIds.indexOf(goalId);
+            if (idx > -1) {
+                state.selectedGoalIds.splice(idx, 1);
+                delete state.selectedObjectivesByGoal[goalId];
+            } else {
+                state.selectedGoalIds.push(goalId);
+                if (!state.selectedObjectivesByGoal[goalId]) {
+                    state.selectedObjectivesByGoal[goalId] = [];
+                }
+            }
+            renderStep2();
+            updateAllBadgesAndStickyBar();
+        }
+
+        // =========================================================================
+        // 9. STEP 3 RENDERING & OBJECTIVE SELECTION
+        // =========================================================================
+        function renderStep3() {
+            const container = document.getElementById("objectivesByGoalContainer");
+            const totalCounter = document.getElementById("objectiveTotalCounter");
+
+            const totalObjs = Object.values(state.selectedObjectivesByGoal).reduce((sum, arr) => sum + arr.length, 0);
+            totalCounter.textContent = `Total Selected: ${totalObjs} Objective${totalObjs === 1 ? "" : "s"}`;
+
+            container.innerHTML = "";
+
+            if (state.selectedGoalIds.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white p-10 rounded-2xl border border-slate-200 text-center space-y-3">
+                        <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto">
+                            <i class="fa-solid fa-bullseye text-lg"></i>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-900">No Clinical Goals Selected Yet</h3>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto">
+                            Please return to Step 2 and choose 3–4 clinical goals before selecting process objectives.
+                        </p>
+                        <button onclick="goToStep(2)" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition">
+                            Go to Step 2: Select Goals
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            state.selectedGoalIds.forEach((gId, gIndex) => {
+                const goal = GOALS_DB[gId];
+                if (!goal) return;
+
+                const selectedObjIds = state.selectedObjectivesByGoal[gId] || [];
+                const goalCard = document.createElement("div");
+                goalCard.className = "bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden";
+
+                const objectivesHtml = goal.objectiveIds.map((oId, oIndex) => {
+                    const obj = OBJECTIVES_DB[oId];
+                    if (!obj) return "";
+
+                    const isChecked = selectedObjIds.includes(oId);
+                    const objLabel = `${gIndex + 1}${String.fromCharCode(65 + oIndex)}`;
+
+                    const renderedTextHtml = state.auditMetricsOn
+                        ? `${obj.baseText}<span class="text-teal-700 font-semibold">${obj.metricClause}</span>.`
+                        : `${obj.baseText}.`;
+
+                    const interventionsHtml = obj.interventions.map(inv => `
+                        <li class="text-[11px] text-slate-600 leading-relaxed flex items-start gap-2">
+                            <span class="text-teal-600 mt-0.5">•</span>
+                            <span>${inv}</span>
+                        </li>
+                    `).join("");
+
+                    return `
+                        <div class="rounded-xl border transition ${
+                            isChecked
+                                ? "border-teal-600 bg-teal-50/30 ring-1 ring-teal-500/40"
+                                : "border-slate-200 hover:border-slate-300 bg-white"
+                        }">
+                            <div onclick="toggleObjective('${gId}', '${oId}')" class="p-4 cursor-pointer flex items-start gap-3.5">
+                                <div class="w-5 h-5 rounded-md mt-0.5 flex items-center justify-center shrink-0 transition ${
+                                    isChecked
+                                        ? "bg-teal-600 text-white"
+                                        : "border border-slate-300 bg-slate-50"
+                                }">
+                                    ${isChecked ? '<i class="fa-solid fa-check text-[10px]"></i>' : ""}
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+                                            Objective ${objLabel}
+                                        </span>
+                                    </div>
+                                    <p class="text-xs sm:text-[13px] font-medium text-slate-800 leading-relaxed">
+                                        ${renderedTextHtml}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Automatically Paired Clinician Interventions Preview -->
+                            <div class="px-4 pb-3.5 pt-2 mx-4 mb-3.5 rounded-lg bg-slate-50/90 border border-slate-200/70">
+                                <div class="flex items-center gap-1.5 mb-1.5">
+                                    <i class="fa-solid fa-hand-holding-heart text-teal-600 text-[10px]"></i>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                                        Paired Clinician Interventions (Auto-Attached)
+                                    </span>
+                                </div>
+                                <ul class="space-y-1">
+                                    ${interventionsHtml}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+                goalCard.innerHTML = `
+                    <div class="px-5 py-4 bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-teal-300">
+                                Goal ${gIndex + 1} • ${goal.domainTag}
+                            </span>
+                            <h3 class="text-xs sm:text-sm font-semibold text-white leading-snug">
+                                ${goal.text}
+                            </h3>
+                        </div>
+                        <span class="text-[11px] font-semibold px-3 py-1 rounded-full shrink-0 self-start sm:self-center ${
+                            selectedObjIds.length >= 1 && selectedObjIds.length <= 2
+                                ? "bg-teal-600 text-white"
+                                : "bg-slate-800 text-slate-300 border border-slate-700"
+                        }">
+                            ${selectedObjIds.length} Selected (Target: 1–2)
+                        </span>
+                    </div>
+                    <div class="p-5 space-y-3.5">
+                        ${objectivesHtml}
+                    </div>
+                `;
+                container.appendChild(goalCard);
+            });
+        }
+
+        function toggleObjective(goalId, objId) {
+            if (!state.selectedObjectivesByGoal[goalId]) {
+                state.selectedObjectivesByGoal[goalId] = [];
+            }
+            const arr = state.selectedObjectivesByGoal[goalId];
+            const idx = arr.indexOf(objId);
+            if (idx > -1) {
+                arr.splice(idx, 1);
+            } else {
+                arr.push(objId);
+            }
+            renderStep3();
+            updateAllBadgesAndStickyBar();
+        }
+
+        // =========================================================================
+        // 10. STEP 4 RENDERING (EXPORT + INLINE EDITING + PURE TEXT COPY)
+        // =========================================================================
+        function renderStep4() {
+            const container = document.getElementById("exportCardsContainer");
+            container.innerHTML = "";
+
+            if (state.selectedGoalIds.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white p-10 rounded-2xl border border-slate-200 text-center space-y-3">
+                        <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                            <i class="fa-solid fa-file-circle-question text-lg"></i>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-900">Your Treatment Plan is Currently Empty</h3>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto">
+                            Select presenting concerns, goals, and objectives in Steps 1–3 to generate your exportable treatment plan.
+                        </p>
+                        <button onclick="goToStep(1)" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition">
+                            Start at Step 1
+                        </button>
+                    </div>
+                `;
+                updateFullPlanPreview();
+                return;
+            }
+
+            state.selectedGoalIds.forEach((gId, gIndex) => {
+                const goal = GOALS_DB[gId];
+                if (!goal) return;
+
+                const goalNum = gIndex + 1;
+                const goalText = getGoalTextForExport(goal);
+                const selectedObjIds = state.selectedObjectivesByGoal[gId] || [];
+
+                const card = document.createElement("div");
+                card.className = "bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden print-clean";
+
+                // Objectives & Interventions HTML
+                let objectivesBlockHtml = "";
+                if (selectedObjIds.length === 0) {
+                    objectivesBlockHtml = `
+                        <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-800 flex items-center justify-between gap-3">
+                            <span>No objectives selected for this goal yet.</span>
+                            <button onclick="goToStep(3)" class="text-xs font-semibold underline hover:text-amber-950 shrink-0 no-print">
+                                Add objectives
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    objectivesBlockHtml = selectedObjIds.map((oId, oIndex) => {
+                        const obj = OBJECTIVES_DB[oId];
+                        if (!obj) return "";
+
+                        const objLetter = String.fromCharCode(65 + oIndex);
+                        const objText = getObjectiveTextForExport(gId, obj);
+                        const interventionsText = getInterventionsTextForExport(gId, obj);
+                        const editKey = `${gId}__${oId}`;
+
+                        return `
+                            <div class="rounded-xl border border-slate-200 bg-slate-50/50 p-4 space-y-3.5">
+                                <!-- Objective Row -->
+                                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                                    <div class="flex-grow space-y-1">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-100/80 text-teal-800">
+                                                Objective ${goalNum}${objLetter}
+                                            </span>
+                                            <span class="text-[10px] text-slate-400 no-print">Click text to edit</span>
+                                        </div>
+                                        <div
+                                            id="objEditable_${editKey}"
+                                            contenteditable="true"
+                                            oninput="handleObjectiveInlineEdit('${gId}', '${oId}', this.innerText)"
+                                            class="text-xs sm:text-[13px] font-medium text-slate-800 leading-relaxed p-2 -ml-2 rounded-lg transition border border-transparent hover:border-slate-200"
+                                        >${escapeHtml(objText)}</div>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onclick="copyPureObjective('${gId}', '${oId}')"
+                                        class="bg-white hover:bg-teal-50 text-slate-700 hover:text-teal-800 border border-slate-300 hover:border-teal-400 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 shrink-0 self-start shadow-2xs no-print"
+                                        title="Copy only the objective statement text"
+                                    >
+                                        <i class="fa-regular fa-copy text-teal-600"></i>
+                                        <span>Copy Objective</span>
+                                    </button>
+                                </div>
+
+                                <!-- Interventions Row -->
+                                <div class="pl-3.5 border-l-2 border-teal-500/50 space-y-1.5">
+                                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                                        <div class="flex-grow space-y-1">
+                                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                                                Clinician Interventions
+                                            </span>
+                                            <div
+                                                id="invEditable_${editKey}"
+                                                contenteditable="true"
+                                                oninput="handleInterventionInlineEdit('${gId}', '${oId}', this.innerText)"
+                                                class="text-xs text-slate-600 leading-relaxed whitespace-pre-line p-2 -ml-2 rounded-lg transition border border-transparent hover:border-slate-200"
+                                            >${escapeHtml(interventionsText)}</div>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            onclick="copyPureInterventions('${gId}', '${oId}')"
+                                            class="bg-white hover:bg-teal-50 text-slate-600 hover:text-teal-800 border border-slate-200 hover:border-teal-400 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition flex items-center gap-1.5 shrink-0 self-start no-print"
+                                            title="Copy only the clinician intervention text"
+                                        >
+                                            <i class="fa-regular fa-copy text-teal-600"></i>
+                                            <span>Copy Interventions</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join("");
+                }
+
+                card.innerHTML = `
+                    <!-- Goal Header Block -->
+                    <div class="p-5 bg-slate-900 text-white flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                        <div class="flex-grow space-y-1.5">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-teal-600 text-white">
+                                    Goal ${goalNum}
+                                </span>
+                                <span class="text-[11px] text-slate-400">${goal.domainTag}</span>
+                                <span class="text-[10px] text-slate-400 no-print">• Click text to edit</span>
+                            </div>
+                            <div
+                                id="goalEditable_${gId}"
+                                contenteditable="true"
+                                oninput="handleGoalInlineEdit('${gId}', this.innerText)"
+                                class="text-sm font-semibold text-white leading-relaxed p-2 -ml-2 rounded-lg transition border border-transparent hover:border-slate-700 focus:text-slate-900"
+                            >${escapeHtml(goalText)}</div>
+                        </div>
+
+                        <button
+                            type="button"
+                            onclick="copyPureGoal('${gId}')"
+                            class="bg-teal-600 hover:bg-teal-500 text-white px-3.5 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shrink-0 self-start shadow-sm no-print"
+                            title="Copy only the goal statement text"
+                        >
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Copy Goal</span>
+                        </button>
+                    </div>
+
+                    <!-- Nested Objectives & Interventions -->
+                    <div class="p-5 space-y-4">
+                        ${objectivesBlockHtml}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            updateFullPlanPreview();
+        }
+
+        function handleGoalInlineEdit(goalId, newText) {
+            state.customGoalTexts[goalId] = newText.trim();
+            updateFullPlanPreview();
+        }
+
+        function handleObjectiveInlineEdit(goalId, objId, newText) {
+            const key = `${goalId}__${objId}`;
+            state.customObjectiveTexts[key] = newText.trim();
+            updateFullPlanPreview();
+        }
+
+        function handleInterventionInlineEdit(goalId, objId, newText) {
+            const key = `${goalId}__${objId}`;
+            state.customInterventionTexts[key] = newText.trim();
+            updateFullPlanPreview();
+        }
+
+        // Pure text copy functions (NO labels, headers, numbers, or bullets)
+        function copyPureGoal(goalId) {
+            const el = document.getElementById(`goalEditable_${goalId}`);
+            const pureText = el ? el.innerText.trim() : getGoalTextForExport(GOALS_DB[goalId]);
+            copyToClipboard(pureText, "Copied Goal text to clipboard.");
+        }
+
+        function copyPureObjective(goalId, objId) {
+            const key = `${goalId}__${objId}`;
+            const el = document.getElementById(`objEditable_${key}`);
+            const pureText = el ? el.innerText.trim() : getObjectiveTextForExport(goalId, OBJECTIVES_DB[objId]);
+            copyToClipboard(pureText, "Copied Objective text to clipboard.");
+        }
+
+        function copyPureInterventions(goalId, objId) {
+            const key = `${goalId}__${objId}`;
+            const el = document.getElementById(`invEditable_${key}`);
+            const pureText = el ? el.innerText.trim() : getInterventionsTextForExport(goalId, OBJECTIVES_DB[objId]);
+            copyToClipboard(pureText, "Copied Interventions text to clipboard.");
+        }
+
+        function buildFullPlanPlainText() {
+            if (state.selectedGoalIds.length === 0) {
+                return "No goals selected yet.";
+            }
+
+            const lines = [];
+            state.selectedGoalIds.forEach((gId, gIdx) => {
+                const goal = GOALS_DB[gId];
+                if (!goal) return;
+
+                const goalNum = gIdx + 1;
+                const goalText = getGoalTextForExport(goal);
+                lines.push(`GOAL ${goalNum}: ${goalText}`);
+
+                const selectedObjIds = state.selectedObjectivesByGoal[gId] || [];
+                if (selectedObjIds.length === 0) {
+                    lines.push(`  (No objectives selected)`);
+                } else {
+                    selectedObjIds.forEach((oId, oIdx) => {
+                        const obj = OBJECTIVES_DB[oId];
+                        if (!obj) return;
+                        const objLetter = String.fromCharCode(65 + oIdx);
+                        const objText = getObjectiveTextForExport(gId, obj);
+                        lines.push(`  Objective ${goalNum}${objLetter}: ${objText}`);
+
+                        const invText = getInterventionsTextForExport(gId, obj);
+                        invText.split("\n").filter(Boolean).forEach(invLine => {
+                            lines.push(`    - ${invLine.trim()}`);
+                        });
+                    });
+                }
+                lines.push("");
+            });
+
+            return lines.join("\n").trim();
+        }
+
+        function updateFullPlanPreview() {
+            const previewEl = document.getElementById("fullPlanPlainPreview");
+            if (previewEl) {
+                previewEl.textContent = buildFullPlanPlainText();
+            }
+        }
+
+        function copyFullPlan() {
+            const fullText = buildFullPlanPlainText();
+            copyToClipboard(fullText, "Copied complete treatment plan to clipboard.");
+        }
+
+        // =========================================================================
+        // 11. CLIPBOARD & FLOATING TOAST NOTIFICATIONS (NO ALERT POPUPS)
+        // =========================================================================
+        function copyToClipboard(text, successMessage) {
+            if (!text) return;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text)
+                    .then(() => showToast(successMessage))
+                    .catch(() => fallbackCopyText(text, successMessage));
+            } else {
+                fallbackCopyText(text, successMessage);
+            }
+        }
+
+        function fallbackCopyText(text, successMessage) {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.style.position = "fixed";
+            textarea.style.left = "-9999px";
+            textarea.style.top = "0";
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                document.execCommand("copy");
+                showToast(successMessage);
+            } catch (err) {
+                showToast("Unable to access clipboard automatically. Please select and copy manually.", true);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(message, isError = false) {
+            const container = document.getElementById("toastContainer");
+            const toast = document.createElement("div");
+
+            toast.className = `toast-enter pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-lg border text-xs font-semibold ${
+                isError
+                    ? "bg-rose-900 text-white border-rose-700"
+                    : "bg-slate-900 text-white border-slate-700"
+            }`;
+
+            toast.innerHTML = `
+                <i class="fa-solid ${isError ? "fa-circle-exclamation text-rose-400" : "fa-circle-check text-teal-400"} text-sm"></i>
+                <span>${escapeHtml(message)}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                toast.style.transform = "translateY(8px)";
+                toast.style.transition = "all 0.2s ease";
+                setTimeout(() => toast.remove(), 220);
+            }, 2600);
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+    </script>
+</body>
+</html>
